@@ -1,0 +1,13 @@
+{
+  "name": "desktop-sticky-notes",
+  "version": "1.0.0",
+  "description": "桌面便利贴 - 直接贴在 Windows 桌面上",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "electron-builder install-app-deps || true"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0"
+  }
+}

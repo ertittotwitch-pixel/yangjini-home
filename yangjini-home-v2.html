@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>羊积泥 · 数字角落</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500&family=Ma+Shan+Zheng&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #FCF9F2;
+    --surface: #FFFFFF;
+    --text:    #2D1B1B;
+    --muted:   #8B7568;
+    --accent:  #C7624A;
+    --accent2: #7A9E7E;
+    --warm:    #F3ECE0;
+    --border:  #E6DCD0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at 85% 5%,  rgba(199,98,74,0.05) 0%, transparent 55%),
+      radial-gradient(ellipse at 15% 70%, rgba(122,158,126,0.04) 0%, transparent 50%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 99999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 256px;
+  }
+
+  /* ======== SCROLL REVEAL ======== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ======== HERO ======== */
+  .hero {
+    padding: 100px 28px 80px;
+    max-width: 760px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    align-items: end;
+    transition: transform 0.15s ease-out;
+    will-change: transform;
+  }
+  .hero-left { grid-column: 1; }
+  .hero-right { grid-column: 2; padding-bottom: 14px; }
+  .hero .scribble {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 1.5rem;
+    color: var(--accent);
+    opacity: 0.85;
+    line-height: 1;
+    margin-bottom: 12px;
+    transform: rotate(-2deg);
+    display: inline-block;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+  .hero .tagline {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.9;
+    max-width: 380px;
+  }
+  .hero .tagline em {
+    font-style: normal; font-weight: 500; color: var(--accent);
+  }
+  .hero-right .doodle-note {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 1rem;
+    color: var(--accent2);
+    opacity: 0.7;
+    line-height: 1.6;
+    text-align: right;
+    padding-top: 8px;
+    border-top: 2px dotted var(--border);
+    animation: float-note 4s ease-in-out infinite;
+  }
+  @keyframes float-note {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(0.5deg); }
+  }
+
+  .wavy-underline {
+    display: block; width: 100%; height: 14px;
+    margin-top: -10px; margin-bottom: 8px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14'%3E%3Cpath d='M0,7 Q25,0 50,7 T100,7 T150,7 T200,7' fill='none' stroke='%23C7624A' stroke-width='1.5' opacity='0.5'/%3E%3C/svg%3E") repeat-x bottom/200px 14px;
+  }
+
+  /* ======== SCROLL INDICATOR ======== */
+  .scroll-hint {
+    text-align: center;
+    padding-bottom: 16px;
+    animation: bounce-down 2s ease-in-out infinite;
+    opacity: 0.35;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-family: 'Ma Shan Zheng', cursive;
+  }
+  @keyframes bounce-down {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+
+  /* ======== SECTION BASE ======== */
+  .section {
+    max-width: 760px; margin: 0 auto; padding: 0 28px 88px;
+  }
+  .section-num {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 1.3rem; color: var(--accent); opacity: 0.6;
+    display: inline-block; margin-bottom: 8px; transform: rotate(-3deg);
+  }
+
+  /* ======== ABOUT ======== */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 420px; gap: 40px; align-items: start;
+  }
+  .about-grid h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.6rem; font-weight: 700; letter-spacing: 0.04em;
+    line-height: 1.4; text-align: right; padding-top: 6px;
+  }
+  .about-grid h2 .hl {
+    display: inline-block;
+    background: linear-gradient(to top, rgba(199,98,74,0.15) 40%, transparent 40%);
+  }
+  .about-text {
+    font-size: 0.92rem; line-height: 2; color: #5A4242;
+  }
+  .about-text .annotation {
+    font-family: 'Ma Shan Zheng', cursive; font-size: 1rem;
+    color: var(--accent); opacity: 0.7; display: inline-block;
+    transform: rotate(-2deg); margin-left: 4px;
+  }
+  .note {
+    background: #FFFEF9; border: 1px solid #E6DCD0;
+    padding: 22px 26px; margin-top: 28px;
+    transform: rotate(0.8deg);
+    box-shadow: 0 1px 2px rgba(45,27,27,0.03), 0 6px 20px rgba(45,27,27,0.04);
+    position: relative; max-width: 460px; margin-left: auto;
+    transition: transform 0.3s;
+  }
+  .note:hover { transform: rotate(0deg) scale(1.02); }
+  .note p { font-size: 0.88rem; color: #5A4242; line-height: 1.9; }
+  .note::after {
+    content: ''; position: absolute; top: -12px; left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 56px; height: 22px;
+    background: rgba(255,255,245,0.75); border: 1px solid #E8DFD1; border-radius: 2px;
+  }
+
+  /* ======== TIMELINE (NEW) ======== */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+    border-left: 2px dashed var(--border);
+    margin-left: 100px;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 32px;
+    padding-left: 28px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -35px; top: 6px;
+    width: 12px; height: 12px;
+    background: var(--accent); border-radius: 50%;
+    opacity: 0.5;
+    transition: all 0.3s;
+  }
+  .timeline-item:hover::before {
+    opacity: 1; transform: scale(1.4);
+    box-shadow: 0 0 0 6px rgba(199,98,74,0.1);
+  }
+  .timeline-item .year {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 0.9rem; color: var(--accent); opacity: 0.7; margin-bottom: 4px;
+  }
+  .timeline-item h4 {
+    font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; margin-bottom: 4px;
+  }
+  .timeline-item p {
+    font-size: 0.85rem; color: #7A6464; line-height: 1.7;
+  }
+
+  /* ======== SKILLS ======== */
+  .skills-area {
+    display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: center;
+  }
+  .skills-area .tag {
+    font-size: 0.9rem; padding: 9px 20px; border-radius: 100px;
+    background: var(--warm); color: #6B5040; border: 1px solid var(--border);
+    cursor: default; transition: all 0.2s; white-space: nowrap;
+  }
+  .skills-area .tag:hover {
+    background: var(--surface); border-color: var(--accent2);
+    transform: translateY(-2px) rotate(1deg);
+  }
+  .skills-area .tag:nth-child(2) { font-size: 1rem; padding: 11px 24px; }
+  .skills-area .tag:nth-child(3) { transform: rotate(-1deg); }
+  .skills-area .tag:nth-child(5) { font-size: 0.82rem; transform: rotate(0.5deg); }
+  .skills-area .tag:nth-child(7) { transform: rotate(-0.8deg); }
+  .tag.highlight {
+    background: var(--accent) !important; color: #fff !important;
+    border-color: var(--accent) !important; font-weight: 500;
+    font-size: 1.05rem !important; padding: 12px 26px !important;
+    transform: rotate(-2deg) !important;
+  }
+  .tag.highlight:hover { transform: rotate(2deg) !important; }
+  .handwritten-note {
+    display: inline-block; font-family: 'Ma Shan Zheng', cursive;
+    font-size: 0.95rem; color: var(--accent2); opacity: 0.65;
+    margin-left: 8px; transform: rotate(-4deg);
+  }
+
+  /* ======== PROJECTS ======== */
+  .project-list { display: flex; flex-direction: column; gap: 18px; }
+  .project-card {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 22px 26px; text-decoration: none; color: inherit;
+    display: block; max-width: 440px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+  }
+  .project-card:nth-child(1) { margin-left: 0;  transform: rotate(-0.4deg); border-radius: 2px 16px 16px 4px; }
+  .project-card:nth-child(2) { margin-left: auto; transform: rotate(0.6deg);  border-radius: 16px 2px 4px 16px; }
+  .project-card:nth-child(3) { margin-left: 40px; transform: rotate(-0.3deg); border-radius: 4px 4px 18px 4px; }
+  .project-card:nth-child(4) { margin-left: auto; margin-right: 20px; transform: rotate(0.9deg);  border-radius: 12px 2px 4px 14px; }
+  .project-card:hover {
+    transform: translateY(-4px) rotate(0deg) !important;
+    box-shadow: 0 10px 32px rgba(45,27,27,0.08);
+    border-color: #D0C4B6;
+  }
+  .project-card h4 { font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .project-card .role {
+    font-size: 0.78rem; color: var(--accent); font-weight: 500;
+    margin-bottom: 8px; display: inline-block;
+    background: rgba(199,98,74,0.06); padding: 2px 10px; border-radius: 100px;
+  }
+  .project-card p { font-size: 0.84rem; color: #7A6464; line-height: 1.7; }
+
+  /* ---- arrow indicator on hover ---- */
+  .project-card::after {
+    content: '→';
+    position: absolute;
+    right: 22px; bottom: 20px;
+    font-size: 1rem;
+    color: var(--accent);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.25s ease;
+  }
+  .project-card:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .project-card:nth-child(1)::before {
+    content: ''; position: absolute; top: -9px; left: 60px;
+    width: 44px; height: 20px;
+    background: rgba(255,255,245,0.7); border: 1px solid #E8DFD1;
+    border-radius: 1px; transform: rotate(-5deg);
+  }
+
+  /* ======== CURRENTLY (NEW) ======== */
+  .currently-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+  }
+  .currently-card {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 20px 22px; border-radius: 4px 16px 4px 16px;
+    transition: all 0.25s;
+  }
+  .currently-card:nth-child(2) { border-radius: 16px 4px 16px 4px; transform: rotate(-0.4deg); }
+  .currently-card:nth-child(3) { border-radius: 6px 20px 6px 6px; transform: rotate(0.5deg); }
+  .currently-card:hover {
+    transform: translateY(-3px) rotate(0deg) !important;
+    box-shadow: 0 6px 20px rgba(45,27,27,0.05);
+  }
+  .currently-card .icon { font-size: 1.4rem; margin-bottom: 8px; }
+  .currently-card h4 {
+    font-family: 'Noto Serif SC', serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 6px;
+  }
+  .currently-card p { font-size: 0.82rem; color: #7A6464; line-height: 1.7; }
+
+  /* ======== VALUES (NEW) ======== */
+  .values-list {
+    display: flex; flex-direction: column; gap: 14px;
+    max-width: 560px; margin-left: 60px;
+  }
+  .value-item {
+    display: flex; align-items: baseline; gap: 14px;
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .value-item:hover { padding-left: 8px; }
+  .value-item .v-num {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 1.2rem; color: var(--accent2); opacity: 0.5;
+    flex-shrink: 0;
+  }
+  .value-item strong {
+    font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700;
+    flex-shrink: 0; width: 100px;
+  }
+  .value-item span { font-size: 0.88rem; color: #6B5858; line-height: 1.6; }
+
+  /* ======== FOOTER ======== */
+  .footer {
+    max-width: 760px; margin: 0 auto; padding: 60px 28px 72px; text-align: center;
+  }
+  .footer .divider {
+    width: 48px; height: 4px; background: var(--accent);
+    opacity: 0.3; margin: 0 auto 32px; border-radius: 2px;
+  }
+  .footer .connect {
+    font-family: 'Noto Serif SC', serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 16px;
+  }
+  .footer .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin-bottom: 28px; }
+  .footer .links a {
+    font-size: 0.9rem; color: var(--muted); text-decoration: none; transition: color 0.2s;
+  }
+  .footer .links a:hover { color: var(--accent); }
+  .footer .copyright {
+    color: #B8A99C; font-family: 'Ma Shan Zheng', cursive; font-size: 0.9rem;
+  }
+
+  /* ======== BACK TO TOP (NEW) ======== */
+  .back-top {
+    position: fixed; bottom: 32px; right: 32px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 1.1rem; color: var(--accent);
+    opacity: 0; transform: translateY(12px);
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(45,27,27,0.04);
+  }
+  .back-top.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .back-top:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(45,27,27,0.08); }
+
+  /* ======== RESPONSIVE ======== */
+  @media (max-width: 680px) {
+    .hero { grid-template-columns: 1fr; padding: 60px 20px 56px; }
+    .hero-right { grid-column: 1; padding-top: 20px; }
+    .hero-right .doodle-note { text-align: left; border-top: none; border-left: 2px dotted var(--border); padding-left: 16px; padding-top: 0; }
+    .hero h1 { font-size: 2.6rem; }
+
+    .about-grid { grid-template-columns: 1fr; gap: 16px; }
+    .about-grid h2 { text-align: left; }
+
+    .timeline { margin-left: 0; }
+
+    .project-card:nth-child(1), .project-card:nth-child(2),
+    .project-card:nth-child(3), .project-card:nth-child(4) {
+      margin-left: 0 !important; margin-right: 0 !important;
+      max-width: 100%; transform: rotate(0) !important;
+    }
+
+    .currently-grid { grid-template-columns: 1fr; }
+    .note { margin-left: 0; max-width: 100%; transform: rotate(0); }
+    .values-list { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== HERO ====== -->
+<section class="hero reveal" id="hero">
+  <div class="hero-left">
+    <span class="scribble">嗨，我是</span>
+    <h1>羊积泥</h1>
+    <div class="wavy-underline"></div>
+    <p class="tagline">
+      一个<em>还在探索</em>的大学生。喜欢把想法做成能跑的东西，不喜欢模板化的答案。目前在学着自己搭建属于自己的数字角落。
+    </p>
+  </div>
+  <div class="hero-right">
+    <p class="doodle-note">"这个人好像<br>不太喜欢<br>规规矩矩的东西"</p>
+  </div>
+</section>
+<div class="scroll-hint">↓ 往下逛逛</div>
+
+<!-- ====== ABOUT ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 01</span>
+  <div class="about-grid">
+    <h2 class="reveal">不是<span class="hl">简历</span>，<br>是几句话</h2>
+    <div>
+      <p class="about-text reveal">
+        在读大学生，专业偏技术方向。比起刷题更享受亲手做东西的过程——哪怕一开始很粗糙<span class="annotation">确实粗糙</span>。相信一个好的个人页面不应该看起来像所有人。
+      </p>
+      <p class="about-text reveal reveal-delay-1" style="margin-top:14px;">
+        大部分时间在捣鼓前端和设计相关的东西，偶尔也写点 Python。对"怎么让人感觉舒服"这件事很感兴趣——不光是 UI，也包括文字的语气、间距的节奏、页面加载时的那一瞬间。
+      </p>
+      <div class="note reveal reveal-delay-2">
+        <p>最近在想的事：怎么让网页不只是"信息容器"，而是像走进一个人的房间——桌面的摆放、墙上的贴纸、书架的顺序，都在说"我是谁"。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== JOURNEY (NEW) ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 02</span>
+  <div style="margin-bottom: 28px;">
+    <h2 class="reveal" style="font-family: 'Noto Serif SC', serif; font-size: 1.6rem; font-weight: 700; display: inline;">来路</h2>
+    <span class="handwritten-note reveal reveal-delay-1">走过的几个节点</span>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <p class="year">2023</p>
+      <h4>进入大学，开始接触编程</h4>
+      <p>从一行 "Hello World" 开始的旅程。最早写的是 Python，后来慢慢接触了前端。</p>
+    </div>
+    <div class="timeline-item reveal reveal-delay-1">
+      <p class="year">2024</p>
+      <h4>做了第一个能用的网站</h4>
+      <p>课程项目里第一次完整地做了一个静态站点，发现"东西出现在浏览器里"这件事比想象中快乐。</p>
+    </div>
+    <div class="timeline-item reveal reveal-delay-2">
+      <p class="year">2025</p>
+      <h4>开始在意"设计"这件事</h4>
+      <p>不再满足于"能用就行"，开始琢磨字体、间距、色彩——以及怎么让一个页面有"人味"。</p>
+    </div>
+    <div class="timeline-item reveal reveal-delay-3">
+      <p class="year">现在</p>
+      <h4>搭建自己的数字角落</h4>
+      <p>就是你正在看的这个页面。一个持续生长的地方，不急，慢慢来。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SKILLS ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 03</span>
+  <div style="margin-bottom: 24px;">
+    <h2 class="reveal" style="font-family: 'Noto Serif SC', serif; font-size: 1.6rem; font-weight: 700; display: inline;">在玩这些</h2>
+    <span class="handwritten-note reveal reveal-delay-1">会的和想学的混在一起</span>
+  </div>
+  <div class="skills-area reveal reveal-delay-1">
+    <span class="tag highlight">前端开发</span>
+    <span class="tag">UI 设计</span>
+    <span class="tag">Python</span>
+    <span class="tag">HTML / CSS</span>
+    <span class="tag">JavaScript</span>
+    <span class="tag">Figma</span>
+    <span class="tag">摄影</span>
+    <span class="tag">随便写写</span>
+  </div>
+</section>
+
+<!-- ====== PROJECTS ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 04</span>
+  <div style="margin-bottom: 24px;">
+    <h2 class="reveal" style="font-family: 'Noto Serif SC', serif; font-size: 1.6rem; font-weight: 700; display: inline;">一些尝试</h2>
+    <span class="handwritten-note reveal reveal-delay-1">不多，但每个都是亲手做的</span>
+  </div>
+  <div class="project-list">
+    <a class="project-card reveal" href="#" target="_blank" rel="noopener">
+      <h4>这个个人主页</h4>
+      <span class="role">设计 & 开发</span>
+      <p>就是你正在看的这个页面。想要一个不那么"模板"的地方放自己。花了点时间在细节上——纸纹质感、手写字体、不对称的布局。</p>
+    </a>
+    <a class="project-card reveal reveal-delay-1" href="#" target="_blank" rel="noopener">
+      <h4>课程里的项目</h4>
+      <span class="role">前端开发</span>
+      <p>从静态页面到带交互的小应用，学校作业里做得比较认真的几个。有的关于数据可视化，有的就是纯粹想试试某个效果。</p>
+    </a>
+    <a class="project-card reveal reveal-delay-2" href="#" target="_blank" rel="noopener">
+      <h4>偶尔写的东西</h4>
+      <span class="role">写作</span>
+      <p>关于技术踩坑、设计思路，还有一些东想西想的记录。不追求频率，想写了才写。</p>
+    </a>
+    <a class="project-card reveal reveal-delay-3" href="#" target="_blank" rel="noopener">
+      <h4>待填的坑</h4>
+      <span class="role">计划中</span>
+      <p>想做一个小工具、想学 Three.js、想重新设计一个自己喜欢的 App 界面……想法攒了几个，先把位置留着。</p>
+    </a>
+  </div>
+</section>
+
+<!-- ====== CURRENTLY (NEW) ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 05</span>
+  <div style="margin-bottom: 24px;">
+    <h2 class="reveal" style="font-family: 'Noto Serif SC', serif; font-size: 1.6rem; font-weight: 700; display: inline;">当下</h2>
+    <span class="handwritten-note reveal reveal-delay-1">此刻的状态</span>
+  </div>
+  <div class="currently-grid">
+    <div class="currently-card reveal">
+      <div class="icon">📖</div>
+      <h4>在读/在看</h4>
+      <p>关于排版和字体设计的书，还有一些独立开发者的博客。最近对"安静的设计"很着迷。</p>
+    </div>
+    <div class="currently-card reveal reveal-delay-1">
+      <div class="icon">🔧</div>
+      <h4>在学</h4>
+      <p>把 CSS 学得更深一些——不是会用，是理解为什么。顺便摸一下 GSAP 和基础的动效设计。</p>
+    </div>
+    <div class="currently-card reveal reveal-delay-2">
+      <div class="icon">💭</div>
+      <h4>在想</h4>
+      <p>一个好的个人网站到底应该放什么？不放什么？怎么让访客花 10 秒钟就感受到"这个人有点意思"。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== VALUES (NEW) ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 06</span>
+  <div style="margin-bottom: 24px;">
+    <h2 class="reveal" style="font-family: 'Noto Serif SC', serif; font-size: 1.6rem; font-weight: 700; display: inline;">相信的事</h2>
+    <span class="handwritten-note reveal reveal-delay-1">不一定对，但目前这么想</span>
+  </div>
+  <div class="values-list">
+    <div class="value-item reveal">
+      <span class="v-num">01</span>
+      <strong>少即是多</strong>
+      <span>放上去的东西越少，留下来的东西越重要。一个页面有勇气空着，比塞满更难。</span>
+    </div>
+    <div class="value-item reveal reveal-delay-1">
+      <span class="v-num">02</span>
+      <strong>粗糙可以</strong>
+      <span>完美是迭代出来的，不是第一次就能做到。敢于展示"当前的真实水平"比假装厉害更有意思。</span>
+    </div>
+    <div class="value-item reveal reveal-delay-2">
+      <span class="v-num">03</span>
+      <strong>工具为人服务</strong>
+      <span>不被框架和工具定义。学一个东西是因为它解决了我的问题，而不是因为大家都在用。</span>
+    </div>
+    <div class="value-item reveal reveal-delay-3">
+      <span class="v-num">04</span>
+      <strong>表达欲很重要</strong>
+      <span>不管是代码、文字、还是设计，本质上都是"想说什么"。技术是实现，不是目的。</span>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer class="footer reveal">
+  <div class="divider"></div>
+  <p class="connect">来打个招呼</p>
+  <div class="links">
+    <a href="mailto:your-email@example.com">Email</a>
+    <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+    <a href="#">博客</a>
+    <a href="#">B 站</a>
+  </div>
+  <p class="copyright">这个页面会持续生长，就像人一样。</p>
+</footer>
+
+<!-- ====== BACK TO TOP ====== -->
+<button class="back-top" id="backTop" title="回到顶部">↑</button>
+
+<script>
+  /* ---- Scroll Reveal ---- */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ---- Hero Parallax ---- */
+  const hero = document.getElementById('hero');
+  let heroActive = true;
+  document.addEventListener('mousemove', (e) => {
+    if (!heroActive) return;
+    const x = (e.clientX / window.innerWidth - 0.5) * 14;
+    const y = (e.clientY / window.innerHeight - 0.5) * 14;
+    hero.style.transform = `translate(${x}px, ${y}px)`;
+  });
+  /* Disable parallax once hero scrolls out to save perf */
+  const heroObs = new IntersectionObserver(([e]) => { heroActive = e.isIntersecting; }, { threshold: 0 });
+  heroObs.observe(hero);
+
+  /* ---- Back to Top ---- */
+  const backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('show', window.scrollY > 500);
+  });
+  backTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ---- Mark hero as visible on load ---- */
+  document.querySelector('.hero.reveal').classList.add('visible');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游戏化个人作品集 — 六种模式拆解</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    background: #F8F8F8; color: #1A1A1A; -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 80px 24px; }
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .sub { color: #888; margin-bottom: 48px; }
+
+  .pattern { background: #fff; border: 1px solid #E5E5E5; border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+  .pattern h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+  .pattern .meta { font-size: 0.85rem; color: #999; margin-bottom: 16px; }
+  .pattern .flow { background: #F5F5F5; border-radius: 10px; padding: 16px 20px; margin-bottom: 14px; font-size: 0.9rem; }
+  .pattern .flow strong { display: block; margin-bottom: 6px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: #666; }
+  .pattern .detail { font-size: 0.9rem; color: #555; }
+  .pattern .verdict { display: inline-block; margin-top: 12px; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; background: #FFF3CD; color: #856404; }
+
+  .summary-table { width: 100%; border-collapse: collapse; margin-top: 48px; font-size: 0.9rem; }
+  .summary-table th { text-align: left; padding: 12px 16px; border-bottom: 2px solid #E5E5E5; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: #888; }
+  .summary-table td { padding: 14px 16px; border-bottom: 1px solid #EEE; vertical-align: top; }
+  .summary-table tr:hover td { background: #FAFAFA; }
+
+  .links { margin-top: 40px; padding-top: 32px; border-top: 1px solid #E5E5E5; }
+  .links h3 { font-size: 1rem; margin-bottom: 12px; }
+  .links a { display: block; color: #1A1A1A; font-size: 0.9rem; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>游戏化个人作品集：六种核心模式</h1>
+<p class="sub">游戏和自我介绍结合的六种映射方式，从最重到最轻</p>
+
+<div class="pattern">
+  <h2>1. 舞台隐喻</h2>
+  <p class="meta">代表：Aurel's Grand Theater · 开发量：极大</p>
+  <div class="flow">
+    <strong>映射逻辑</strong>
+    项目 = 剧院里的演出节目。入口是旋转门票菜单，每张票是一个项目。点票 → 票撕开 → 演出开始。地下室更衣室用来展示项目详情（DOM 排版），3D 世界和 2D 内容页之间用电影级过渡。解谜收集钥匙解锁隐藏页面。
+  </div>
+  <div class="detail">100+ 3D 模型，150 个物理物体。玩家扮演浣熊在废弃剧院中探索。Ghibli 美学 + 维多利亚 UI。</div>
+  <div class="verdict">适合：交互设计师</div>
+</div>
+
+<div class="pattern">
+  <h2>2. 岛屿/景观隐喻</h2>
+  <p class="meta">代表：Bruno Simon folio-2025 · 开发量：大</p>
+  <div class="flow">
+    <strong>映射逻辑</strong>
+    个人信息 = 3D 岛屿上的地标。路标指向不同 section，建筑代表项目。开车行驶在道路上 = 浏览生涯轨迹。本质是把导航菜单做成了物理世界——你不用点菜单，你开过去。
+  </div>
+  <div class="detail">Three.js 构建完整 3D 世界。经典案例，访问量超 40 万。</div>
+  <div class="verdict">适合：创意开发者</div>
+</div>
+
+<div class="pattern">
+  <h2>3. 关卡隐喻</h2>
+  <p class="meta">代表：Martin Laxenaire Portfolio 2025 · 开发量：中-大</p>
+  <div class="flow">
+    <strong>映射逻辑</strong>
+    每个 section = 一个街机游戏关卡。每关是一个 WebGPU 程序化场景，需要用户交互（拖拽、按住）才能完成。完成后解锁下一关。80 年代街机美学。
+  </div>
+  <div class="detail">体验本身就是技术展示——你看到的视觉效果就是你的能力证明。WebGPU + compute shaders。</div>
+  <div class="verdict">适合：前端/图形方向</div>
+</div>
+
+<div class="pattern">
+  <h2>4. 终端/OS 隐喻</h2>
+  <p class="meta">代表：el1fe.com · 开发量：中</p>
+  <div class="flow">
+    <strong>映射逻辑</strong>
+    whoami → 我是谁。projects → 项目列表。cat resume → 履历。内置 Snake、Matrix 雨、黑客入侵模拟。实时显示同时在线访客的光标位置。
+  </div>
+  <div class="detail">用程序员的母语做自我介绍。共鸣强，门槛低。Next.js + Supabase Realtime。</div>
+  <div class="verdict">适合：后端/全栈</div>
+</div>
+
+<div class="pattern">
+  <h2>5. DOM 即关卡</h2>
+  <p class="meta">代表：Space Invaders Resume · 开发量：中</p>
+  <div class="flow">
+    <strong>映射逻辑</strong>
+    简历内容 = 外星人舰队。外星人是 DOM 节点。射击 → 真实删除 DOM 元素。游戏层和内容层是同一层，两个面。
+  </div>
+  <div class="detail">最极端的 "show don't tell"。SvelteKit + TailwindCSS。WCAG 2.2 AA 无障碍。</div>
+  <div class="verdict">适合：创意方向</div>
+</div>
+
+<div class="pattern">
+  <h2>6. RPG 角色隐喻</h2>
+  <p class="meta">代表：Hero's Chronicle · 开发量：小-中</p>
+  <div class="flow">
+    <strong>映射逻辑</strong>
+    技能 → RPG 属性面板（力量/敏捷/智力）。项目 → 已完成的任务。经历 → 任务日志/角色进度。About → 角色创建页。
+  </div>
+  <div class="detail">六种中最轻量——本质还是网页，只是披了 RPG UI 的皮。开发成本和技术门槛最低。</div>
+  <div class="verdict">适合：任何人</div>
+</div>
+
+<table class="summary-table">
+  <thead>
+    <tr><th>模式</th><th>隐喻</th><th>项目展示方式</th><th>开发量</th><th>适合谁</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>舞台</td><td>剧院</td><td>节目票 → 演出 → 后台详情</td><td>极大</td><td>交互设计师</td></tr>
+    <tr><td>岛屿</td><td>开车兜风</td><td>路标/建筑 → 弹出详情</td><td>大</td><td>创意开发者</td></tr>
+    <tr><td>关卡</td><td>街机通关</td><td>每关 = 一个 section</td><td>中-大</td><td>前端/图形向</td></tr>
+    <tr><td>终端</td><td>命令行</td><td>命令 → 信息展示</td><td>中</td><td>后端/全栈</td></tr>
+    <tr><td>DOM破坏</td><td>打外星人</td><td>敌机 = 内容块</td><td>中</td><td>创意方向</td></tr>
+    <tr><td>RPG面板</td><td>角色属性</td><td>属性/任务 = 技能/项目</td><td>小-中</td><td>任何人</td></tr>
+  </tbody>
+</table>
+
+<div class="links">
+  <h3>案例链接</h3>
+  <a href="https://www.commarts.com/webpicks/aurel-s-grand-theater">Aurel's Grand Theater — Communication Arts</a>
+  <a href="https://tympanus.net/codrops/2025/05/20/behind-the-curtain-building-aurels-grand-theater-from-design-to-code/">Aurel's Grand Theater — Codrops 深度拆解</a>
+  <a href="https://bruno-simon.com">Bruno Simon — 3D 汽车岛屿</a>
+  <a href="https://okaydev.co/u/martinlaxenaire/portfolio/porfolio-2025">Martin Laxenaire — Portfolio 2025 街机</a>
+  <a href="https://dev.to/el1fe/how-i-built-a-portfolio-that-makes-recruiters-actually-stop-and-look-1e3n">el1fe — 赛博朋克终端</a>
+  <a href="https://dev.to/pedacos/play-my-resume-a-destructible-space-invaders-portfolio-1124">Space Invaders 简历 — DOM 破坏</a>
+</div>
+
+</div>
+</body>
+</html>

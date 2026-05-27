@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>桌面便利贴</title>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --shadow-soft: 0 4px 16px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-lift: 0 12px 36px rgba(0,0,0,0.14), 0 3px 10px rgba(0,0,0,0.06);
+  --radius: 2px 2px 16px 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(0,0,0,0.015) 24px, rgba(0,0,0,0.015) 25px),
+    radial-gradient(circle at 15% 40%, rgba(180,160,140,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 85% 60%, rgba(160,170,150,0.05) 0%, transparent 50%);
+  min-height: 100vh;
+  font-family: 'Noto Sans SC', sans-serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#desktop {
+  position: fixed;
+  inset: 0;
+}
+
+#hint {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #b0a89c;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  transition: opacity 0.6s;
+  z-index: 0;
+}
+
+/* Desktop mode overrides */
+body.desktop-mode {
+  background: transparent;
+  pointer-events: none;
+}
+body.desktop-mode .note,
+body.desktop-mode #toolbar,
+body.desktop-mode #toast {
+  pointer-events: auto;
+}
+body.desktop-mode #hint {
+  color: rgba(255,255,255,0.55);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* ====== Note Card ====== */
+.note {
+  position: absolute;
+  width: 260px;
+  min-height: 200px;
+  border-radius: var(--radius);
+  padding: 28px 18px 44px 18px;
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow 0.3s ease, transform 0.12s ease;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.note:hover { box-shadow: var(--shadow-lift); }
+
+.note.dragging {
+  box-shadow: var(--shadow-lift);
+  z-index: 9999 !important;
+  transition: box-shadow 0.1s, transform 0.05s;
+}
+
+/* Color themes */
+.note.yellow  { background: linear-gradient(170deg, #f7f0cc 0%, #f0e4a8 30%, #f2e6b0 100%); }
+.note.pink    { background: linear-gradient(170deg, #f0ddd6 0%, #e9cfc6 30%, #ebd4cc 100%); }
+.note.green   { background: linear-gradient(170deg, #e0e9d9 0%, #d5e0cc 30%, #d9e3d0 100%); }
+.note.blue    { background: linear-gradient(170deg, #dae1e8 0%, #cdd5df 30%, #d0d8e1 100%); }
+.note.purple  { background: linear-gradient(170deg, #e4dae8 0%, #dacee0 30%, #ddd2e2 100%); }
+.note.orange  { background: linear-gradient(170deg, #f5e4d2 0%, #eed9c2 30%, #f0dcc8 100%); }
+.note.gray    { background: linear-gradient(170deg, #e8e5df 0%, #dedbd4 30%, #e2ded8 100%); }
+
+/* Washi tape at top */
+.note::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  width: 52px;
+  height: 16px;
+  border-radius: 1px;
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 2;
+}
+.note.yellow::before  { background: rgba(180,170,140,0.5); }
+.note.pink::before    { background: rgba(190,150,150,0.4); }
+.note.green::before   { background: rgba(150,175,150,0.4); }
+.note.blue::before    { background: rgba(150,160,180,0.4); }
+.note.purple::before  { background: rgba(175,160,185,0.4); }
+.note.orange::before  { background: rgba(200,170,145,0.4); }
+.note.gray::before    { background: rgba(170,165,160,0.4); }
+
+/* Drag handle */
+.note-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 36px;
+  height: 28px;
+  cursor: grab;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.note:hover .note-handle,
+.note.dragging .note-handle { opacity: 1; }
+
+.note-handle:active { cursor: grabbing; }
+
+.handle-icon {
+  color: rgba(0,0,0,0.15);
+  font-size: 14px;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+/* Title */
+.note-title {
+  font-family: 'Ma Shan Zheng', 'KaiTi', serif;
+  font-size: 22px;
+  color: #4a4035;
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  cursor: text;
+  position: relative;
+  z-index: 1;
+}
+.note-title::placeholder { color: #b0a090; }
+
+/* Body */
+.note-body {
+  flex: 1;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: #5c5248;
+  border: none;
+  background: transparent;
+  outline: none;
+  resize: none;
+  width: 100%;
+  min-height: 80px;
+  cursor: text;
+  overflow: hidden;
+  field-sizing: content;
+  position: relative;
+  z-index: 1;
+}
+.note-body::placeholder { color: #c0b8a8; }
+
+/* Footer */
+.note-footer {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  z-index: 1;
+}
+
+.note-color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+  opacity: 0.45;
+}
+.note-color-dot:hover,
+.note-color-dot.active { transform: scale(1.35); opacity: 1; border-color: rgba(0,0,0,0.25); }
+
+.dot-yellow  { background: #f7f0cc; }
+.dot-pink    { background: #f0ddd6; }
+.dot-green   { background: #e0e9d9; }
+.dot-blue    { background: #dae1e8; }
+.dot-purple  { background: #e4dae8; }
+.dot-orange  { background: #f5e4d2; }
+.dot-gray    { background: #e8e5df; }
+
+.note-delete {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.06);
+  color: #8c8070;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.note-delete:hover { background: rgba(200,80,60,0.2); color: #c0503c; }
+
+.note-resize {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+  z-index: 1;
+}
+
+/* ====== Toolbar ====== */
+#toolbar {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 10000;
+  display: flex;
+  gap: 8px;
+}
+#toolbar button {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(8px);
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 13px;
+  color: #6b6058;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+#toolbar button:hover { background: rgba(255,255,255,0.95); transform: scale(1.04); }
+#toolbar button.primary { background: #6b6058; color: #fff; border-color: transparent; }
+#toolbar button.primary:hover { background: #5a5048; }
+#toolbar button.export { background: rgba(140,170,160,0.3); }
+
+#import-input { display: none; }
+
+/* ====== Toast ====== */
+#toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #4a4035;
+  color: #f5f0e8;
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-size: 13px;
+  z-index: 99999;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ====== Print ====== */
+@media print {
+  body { background: white; overflow: visible; }
+  #desktop { position: static; }
+  .note { position: static !important; break-inside: avoid; margin: 16px auto; }
+  #toolbar, #hint, .note-handle, .note-resize, .note-footer { display: none; }
+}
+
+@media (max-width: 700px) {
+  .note { width: 210px; min-height: 160px; }
+  .note-title { font-size: 19px; }
+  .note-body { font-size: 13px; }
+  #toolbar { top: 10px; right: 8px; gap: 4px; }
+  #toolbar button { padding: 6px 12px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div id="desktop"></div>
+<div id="hint">双击空白处新建便利贴</div>
+
+<div id="toolbar">
+  <button class="primary" id="btn-add">+ 新建</button>
+  <button class="export" id="btn-export">导出</button>
+  <button class="export" id="btn-import">导入</button>
+  <button id="btn-clear">清空</button>
+  <input type="file" id="import-input" accept=".json">
+</div>
+
+<div id="toast"></div>
+
+<script>
+// === Desktop mode detection ===
+const isDesktopMode = window.__DESKTOP_MODE__ === true;
+if (isDesktopMode) {
+  document.body.classList.add('desktop-mode');
+  document.getElementById('hint').textContent = '双击空白处新建 · Ctrl+Shift+Q 退出';
+}
+
+// === State ===
+let notes = [];
+let zCounter = 1;
+const COLORS = ['yellow','pink','green','blue','purple','orange','gray'];
+const COLOR_LABELS = { yellow:'鹅黄', pink:'柔粉', green:'浅绿', blue:'雾蓝', purple:'淡紫', orange:'暖橙', gray:'烟灰' };
+
+// === Persistence ===
+function load() {
+  try {
+    const raw = localStorage.getItem('sticky-notes-v3');
+    if (raw) notes = JSON.parse(raw);
+  } catch(e) { notes = []; }
+  if (!notes.length) {
+    notes.push({
+      id: Date.now(), title: '欢迎使用', body: '双击空白处可新建便签\n拖拽把手移动 · 点击色点换色\n内容实时自动保存 · 支持导出导入',
+      x: 60, y: 60, w: 260, h: 200, color: 'yellow', rotate: -0.8
+    });
+    save();
+  }
+  zCounter = notes.length + 1;
+}
+
+function save() {
+  localStorage.setItem('sticky-notes-v3', JSON.stringify(notes));
+}
+
+// === Export / Import ===
+function exportNotes() {
+  const data = JSON.stringify(notes, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'sticky-notes-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('已导出');
+}
+
+function importNotes(file) {
+  const reader = new FileReader();
+  reader.onload = function() {
+    try {
+      const data = JSON.parse(reader.result);
+      if (!Array.isArray(data)) throw new Error('格式不对');
+      notes = data;
+      zCounter = Math.max(...notes.map(n => n.z || 0), notes.length) + 1;
+      save();
+      renderAll();
+      toast('已导入 ' + notes.length + ' 条便签');
+    } catch(e) {
+      toast('导入失败，文件格式不正确');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+// === Render ===
+const desktop = document.getElementById('desktop');
+
+function renderAll() {
+  desktop.querySelectorAll('.note').forEach(el => el.remove());
+  notes.forEach((n, i) => {
+    n.x = Math.max(0, Math.min(window.innerWidth - n.w - 20, n.x));
+    n.y = Math.max(40, Math.min(window.innerHeight - 100, n.y));
+    createNoteElement(n, i);
+  });
+  updateHint();
+}
+
+function createNoteElement(note, idx) {
+  const el = doc('div', {
+    class: `note ${note.color}`,
+    style: `left:${note.x}px;top:${note.y}px;width:${note.w}px;min-height:${note.h}px;z-index:${note.z||1};transform:rotate(${note.rotate||0}deg)`
+  });
+
+  // Drag handle
+  const handle = doc('div', { class: 'note-handle' });
+  const icon = doc('span', { class: 'handle-icon', textContent: '≡ ≡ ≡' });
+  handle.appendChild(icon);
+
+  // Title
+  const title = doc('input', { class: 'note-title', placeholder: '标题', value: note.title || '' });
+
+  // Body
+  const body = doc('textarea', { class: 'note-body', placeholder: '写点什么...', value: note.body || '' });
+
+  // Footer
+  const footer = doc('div', { class: 'note-footer' });
+
+  COLORS.forEach(c => {
+    const dot = doc('span', {
+      class: `note-color-dot dot-${c} ${note.color === c ? 'active' : ''}`,
+      title: COLOR_LABELS[c]
+    });
+    dot.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); });
+    dot.addEventListener('click', e => {
+      e.stopPropagation();
+      note.color = c;
+      save();
+      renderAll();
+    });
+    footer.appendChild(dot);
+  });
+
+  const delBtn = doc('button', { class: 'note-delete', title: '删除', textContent: '×' });
+  delBtn.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); });
+  delBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    notes.splice(idx, 1);
+    save();
+    renderAll();
+  });
+  footer.appendChild(delBtn);
+
+  // Resize
+  const resize = doc('span', { class: 'note-resize' });
+
+  el.appendChild(handle);
+  el.appendChild(title);
+  el.appendChild(body);
+  el.appendChild(footer);
+  el.appendChild(resize);
+
+  // Auto-save on input
+  const autoSave = () => { note.title = title.value; note.body = body.value; save(); };
+  title.addEventListener('input', autoSave);
+  body.addEventListener('input', autoSave);
+
+  // Bring to front on focus
+  title.addEventListener('focus', () => bringToFront(note, el));
+  body.addEventListener('focus', () => bringToFront(note, el));
+
+  // Drag: ONLY from handle or card background (NOT from inputs/buttons/dots/resize)
+  const startDragFrom = (e) => {
+    const t = e.target;
+    if (t === title || t === body || t === resize) return;
+    if (t.closest('.note-color-dot') || t.closest('.note-delete')) return;
+
+    // If clicking on an input that's currently focused, just let it be (don't drag)
+    if (document.activeElement === title || document.activeElement === body) {
+      if (t !== handle && !t.classList.contains('note-handle') && !t.classList.contains('handle-icon')) {
+        // Clicking card bg while input is focused: blur and allow drag next time
+        return;
+      }
+    }
+
+    e.preventDefault();
+    bringToFront(note, el);
+    startDrag(e, note, el);
+  };
+
+  handle.addEventListener('pointerdown', startDragFrom);
+  el.addEventListener('pointerdown', startDragFrom);
+
+  // Resize
+  resize.addEventListener('pointerdown', e => {
+    e.stopPropagation();
+    e.preventDefault();
+    startResize(e, note, el);
+  });
+
+  desktop.appendChild(el);
+}
+
+function bringToFront(note, el) {
+  note.z = ++zCounter;
+  el.style.zIndex = note.z;
+  save();
+}
+
+// === Drag ===
+function startDrag(e, el_note, el) {
+  const startX = e.clientX, startY = e.clientY;
+  const origX = el_note.x, origY = el_note.y;
+  el.classList.add('dragging');
+  el.setPointerCapture(e.pointerId);
+
+  function move(ev) {
+    el_note.x = origX + (ev.clientX - startX);
+    el_note.y = origY + (ev.clientY - startY);
+    el.style.left = el_note.x + 'px';
+    el.style.top = el_note.y + 'px';
+  }
+
+  function up() {
+    el.classList.remove('dragging');
+    el.removeEventListener('pointermove', move);
+    el.removeEventListener('pointerup', up);
+    save();
+  }
+
+  el.addEventListener('pointermove', move);
+  el.addEventListener('pointerup', up, { once: true });
+}
+
+// === Resize ===
+function startResize(e, note, el) {
+  const startX = e.clientX, startY = e.clientY;
+  const origW = note.w, origH = note.h;
+  el.setPointerCapture(e.pointerId);
+
+  function move(ev) {
+    note.w = Math.max(200, origW + (ev.clientX - startX));
+    note.h = Math.max(140, origH + (ev.clientY - startY));
+    el.style.width = note.w + 'px';
+    el.style.minHeight = note.h + 'px';
+  }
+
+  function up() {
+    el.removeEventListener('pointermove', move);
+    el.removeEventListener('pointerup', up);
+    save();
+  }
+
+  el.addEventListener('pointermove', move);
+  el.addEventListener('pointerup', up, { once: true });
+}
+
+// === Double-click to create ===
+desktop.addEventListener('dblclick', e => {
+  if (e.target !== desktop) return;
+  const note = {
+    id: Date.now(),
+    title: '', body: '',
+    x: e.clientX - 130, y: e.clientY - 100,
+    w: 260, h: 200,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    z: ++zCounter,
+    rotate: (Math.random() - 0.5) * 3.5
+  };
+  notes.push(note);
+  save();
+  renderAll();
+});
+
+// === Toolbar ===
+document.getElementById('btn-add').addEventListener('click', () => {
+  const note = {
+    id: Date.now(),
+    title: '', body: '',
+    x: 100 + Math.random() * 200, y: 80 + Math.random() * 180,
+    w: 260, h: 200,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    z: ++zCounter,
+    rotate: (Math.random() - 0.5) * 3.5
+  };
+  notes.push(note);
+  save();
+  renderAll();
+});
+
+document.getElementById('btn-export').addEventListener('click', exportNotes);
+
+document.getElementById('btn-import').addEventListener('click', () => {
+  document.getElementById('import-input').click();
+});
+
+document.getElementById('import-input').addEventListener('change', function() {
+  if (this.files[0]) importNotes(this.files[0]);
+  this.value = '';
+});
+
+document.getElementById('btn-clear').addEventListener('click', () => {
+  if (!confirm('确定清空所有便利贴吗？')) return;
+  notes = [];
+  save();
+  renderAll();
+});
+
+// === Helpers ===
+function doc(tag, attrs = {}) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'textContent') el.textContent = v;
+    else if (k === 'style') el.style.cssText = v;
+    else el.setAttribute(k, v);
+  }
+  return el;
+}
+
+function updateHint() {
+  document.getElementById('hint').style.opacity = notes.length <= 1 ? '1' : '0';
+}
+
+// === Window resize ===
+window.addEventListener('resize', () => {
+  notes.forEach(n => {
+    n.x = Math.min(n.x, window.innerWidth - n.w - 20);
+    n.y = Math.min(n.y, window.innerHeight - 100);
+  });
+  renderAll();
+});
+
+// === Init ===
+load();
+renderAll();
+</script>
+</body>
+</html>

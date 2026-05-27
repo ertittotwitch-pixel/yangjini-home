@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>卡通风格网页设计灵感合集</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --yellow: #FFE156;
+    --pink: #FF6B8A;
+    --mint: #50E3C2;
+    --purple: #9B59B6;
+    --blue: #4A90D9;
+    --orange: #FF8C42;
+    --bg: #FFFDF7;
+    --text: #2D1B3E;
+    --card-bg: #FFFFFF;
+    --border: #2D1B3E;
+    --radius: 20px;
+    --shadow: 6px 6px 0 #2D1B3E;
+    --shadow-sm: 4px 4px 0 #2D1B3E;
+  }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(255,225,86,0.15) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(255,107,138,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(80,227,194,0.08) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  /* ---- Wavy header divider ---- */
+  .header {
+    text-align: center;
+    padding: 72px 24px 48px;
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 48px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 48'%3E%3Cpath fill='%23FFE156' d='M0,48 C150,0 300,48 600,24 C900,0 1050,48 1200,48 Z'/%3E%3C/svg%3E") repeat-x center/auto 48px;
+  }
+  .header h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  .header h1 span:nth-child(1) { color: var(--pink); }
+  .header h1 span:nth-child(2) { color: var(--purple); }
+  .header h1 span:nth-child(3) { color: var(--blue); }
+  .header p {
+    margin-top: 16px;
+    font-size: 1.1rem;
+    color: #6B5B7A;
+    max-width: 580px;
+    margin-inline: auto;
+  }
+
+  /* ---- Section ---- */
+  .section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  .section-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title .emoji {
+    font-size: 2rem;
+    display: inline-block;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* ---- Card grid ---- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; }
+
+  .card {
+    background: var(--card-bg);
+    border: 3px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 0;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 10px 10px 0 #2D1B3E;
+  }
+  .card-accent {
+    height: 10px;
+  }
+  .card-accent--pink  { background: var(--pink); }
+  .card-accent--mint  { background: var(--mint); }
+  .card-accent--yellow{ background: var(--yellow); }
+  .card-accent--purple{ background: var(--purple); }
+  .card-accent--blue  { background: var(--blue); }
+  .card-accent--orange{ background: var(--orange); }
+
+  .card-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+  .card-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    letter-spacing: 0.04em;
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    margin-bottom: 12px;
+    width: fit-content;
+  }
+  .card h3 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #5A4A6A;
+    flex: 1;
+  }
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 2px dashed #E8DFF0;
+  }
+  .card-tags span {
+    font-size: 0.78rem;
+    background: #FFF0F5;
+    color: #7B4F8A;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+  .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    color: var(--pink);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: gap 0.2s;
+  }
+  .card-link:hover { gap: 10px; }
+  .card-link::after { content: '→'; font-size: 1.1em; }
+
+  /* ---- Resource pills ---- */
+  .resource-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .resource-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: 3px solid var(--border);
+    border-radius: 100px;
+    background: var(--card-bg);
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .resource-pill:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 #2D1B3E;
+  }
+
+  /* ---- Tool tables ---- */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .tool-card {
+    border: 3px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    background: var(--card-bg);
+    box-shadow: var(--shadow-sm);
+  }
+  .tool-card h4 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+  }
+  .tool-card p { font-size: 0.85rem; color: #5A4A6A; line-height: 1.5; }
+  .tool-card a {
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: 600;
+    color: var(--purple);
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  /* ---- Footer ---- */
+  .footer {
+    text-align: center;
+    padding: 48px 24px;
+    color: #9B8AAA;
+    font-size: 0.85rem;
+    position: relative;
+    margin-top: 48px;
+  }
+  .footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 48px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 48'%3E%3Cpath fill='%23FFE156' d='M0,0 C150,48 300,0 600,24 C900,48 1050,0 1200,0 Z'/%3E%3C/svg%3E") repeat-x center/auto 48px;
+  }
+
+  /* ---- Floating dots ---- */
+  .dots {
+    position: fixed;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.25;
+  }
+  .dot { position: absolute; border-radius: 50%; }
+  .dot--lg  { width: 32px; height: 32px; background: var(--yellow); top: 15vh; left: 5vw; }
+  .dot--md  { width: 20px; height: 20px; background: var(--pink); top: 60vh; right: 8vw; }
+  .dot--sm  { width: 12px; height: 12px; background: var(--mint); top: 30vh; right: 15vw; }
+  .dot--xs  { width: 8px; height: 8px; background: var(--purple); top: 80vh; left: 12vw; }
+
+  /* ---- Squiggle text ---- */
+  .squiggle {
+    text-decoration: underline wavy #FFE156 3px;
+    text-underline-offset: 4px;
+  }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+    .header { padding: 48px 16px 36px; }
+    .section { padding: 32px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dots" aria-hidden="true">
+  <div class="dot dot--lg"></div>
+  <div class="dot dot--md"></div>
+  <div class="dot dot--sm"></div>
+  <div class="dot dot--xs"></div>
+</div>
+
+<header class="header">
+  <h1>
+    <span>卡通</span> · <span>插画</span> · <span>手绘</span>
+  </h1>
+  <p>经典卡通风格网页设计灵感合集 — 从吉祥物驱动品牌到互动漫画叙事，从 90 年代卡通复兴到手绘质感</p>
+</header>
+
+<!-- ====== 具体案例 ====== -->
+<div class="section">
+  <h2 class="section-title"><span class="emoji">🎨</span> 代表案例</h2>
+  <div class="grid">
+
+    <!-- Ponpon Mania -->
+    <div class="card">
+      <div class="card-accent card-accent--pink"></div>
+      <div class="card-body">
+        <span class="card-tag">🏆 Awwwards</span>
+        <h3>Ponpon Mania</h3>
+        <p>WebGL 驱动的互动漫画网站。主角是一只梦想成为 DJ 的 megalomaniac 绵羊。黑白漫画在滚动时爆炸出色彩，梦境场景用全彩渲染。</p>
+        <div class="card-tags"><span>WebGL</span><span>互动漫画</span><span>滚动动画</span></div>
+        <a class="card-link" href="https://awwwards.com/ponpon-mania-a-comic-that-breathes-through-web-interaction.html" target="_blank" rel="noopener">Awwwards 详情</a>
+      </div>
+    </div>
+
+    <!-- Fat Llama -->
+    <div class="card">
+      <div class="card-accent card-accent--yellow"></div>
+      <div class="card-body">
+        <span class="card-tag">🦙 吉祥物品牌</span>
+        <h3>Fat Llama</h3>
+        <p>羊驼 Larry 贯穿全站导航 — 从气球上飘来、搭便车、给你的旅程指路。明亮粉彩调色板，波浪线呼应羊绒毛流感。Koto Studio 出品。</p>
+        <div class="card-tags"><span>吉祥物驱动</span><span>粉彩配色</span><span>GIF 动画</span></div>
+        <a class="card-link" href="https://www.transformmagazine.net/articles/2018/little-llama-called-larry-stars-in-digital-brands-new-look/" target="_blank" rel="noopener">Transform Magazine</a>
+      </div>
+    </div>
+
+    <!-- GruffyGoat -->
+    <div class="card">
+      <div class="card-accent card-accent--orange"></div>
+      <div class="card-body">
+        <span class="card-tag">🐐 复古卡通</span>
+        <h3>GruffyGoat</h3>
+        <p>友好山羊吉祥物，融合 Little Golden Books 水粉画风格与经典运动吉祥物气质。自定义字体灵感来自山羊卷尾巴，周六早间卡通级别的品牌动画。</p>
+        <div class="card-tags"><span>手绘角色</span><span>复古插画</span><span>品牌动画</span></div>
+        <a class="card-link" href="https://www.reflectdesign.co/gruffygoat" target="_blank" rel="noopener">Reflect Design</a>
+      </div>
+    </div>
+
+    <!-- Whirlybirdie -->
+    <div class="card">
+      <div class="card-accent card-accent--mint"></div>
+      <div class="card-body">
+        <span class="card-tag">🔤 字体吉祥物</span>
+        <h3>Whirlybirdie</h3>
+        <p>字体家族的 glyph 角色本身就是导航元素。自定义光标变成骰子和其他符号。Svelte 构建 + Glitch 协作的超可爱单页站。</p>
+        <div class="card-tags"><span>Svelte</span><span>字体设计</span><span>互动光标</span></div>
+        <a class="card-link" href="https://www.commarts.com/webpicks/whirlybirdie" target="_blank" rel="noopener">Communication Arts</a>
+      </div>
+    </div>
+
+    <!-- Golden Wolf -->
+    <div class="card">
+      <div class="card-accent card-accent--purple"></div>
+      <div class="card-body">
+        <span class="card-tag">🐺 动画工作室</span>
+        <h3>Golden Wolf</h3>
+        <p>艾美奖提名动画工作室的迷幻作品集站。深色氛围 UI + 社交媒体风插画。内置贪吃蛇彩蛋，客户包括 Nike、Facebook、Disney、Adult Swim。</p>
+        <div class="card-tags"><span>迷幻风</span><span>彩蛋互动</span><span>暗色 UI</span></div>
+        <a class="card-link" href="https://www.superrb.com/our-work/golden-wolf" target="_blank" rel="noopener">Superrb</a>
+      </div>
+    </div>
+
+    <!-- Mike Worth / 90s -->
+    <div class="card">
+      <div class="card-accent card-accent--blue"></div>
+      <div class="card-body">
+        <span class="card-tag">📺 90s 卡通复兴</span>
+        <h3>Mike Worth 作品集</h3>
+        <p>致敬 DuckTales 和 90 年代卡通。Comicraft Danger Girl 字体、粗轮廓线、平涂色彩、原创冒险角色 Orango Jones。Andy Clarke 设计。</p>
+        <div class="card-tags"><span>90s 卡通</span><span>Comicraft 字体</span><span>扁平色块</span></div>
+        <a class="card-link" href="https://elements.envato.com/learn/90s-cartoons" target="_blank" rel="noopener">Envato 分析</a>
+      </div>
+    </div>
+
+    <!-- ZuZu Mart -->
+    <div class="card">
+      <div class="card-accent card-accent--pink"></div>
+      <div class="card-body">
+        <span class="card-tag">🛒 零售品牌世界</span>
+        <h3>ZuZu Mart</h3>
+        <p>Orbix Studio 打造的欢乐杂货店体验。大胆配色、夸张卡通角色、叙事驱动的视觉语言，适合游戏化平台和品牌世界构建。</p>
+        <div class="card-tags"><span>扁平矢量</span><span>品牌世界</span><span>角色设计</span></div>
+        <a class="card-link" href="https://me.muz.li/orbix-studio/zuzu-mart-illustration-cheerful-grocery-experience-2" target="_blank" rel="noopener">Muzli 详情</a>
+      </div>
+    </div>
+
+    <!-- Awk Monks -->
+    <div class="card">
+      <div class="card-accent card-accent--yellow"></div>
+      <div class="card-body">
+        <span class="card-tag">👾 Web3 卡通</span>
+        <h3>Awk Monks</h3>
+        <p>霓虹黄 + 饱和角色艺术 + 表情包文化。互动画廊与社区驱动的嬉皮审美，Web3/NFT 项目中少有的真正有趣的设计。</p>
+        <div class="card-tags"><span>Web3</span><span>霓虹配色</span><span>表情包</span></div>
+        <a class="card-link" href="https://www.designrush.com/best-designs/websites/awk-monks-website-design" target="_blank" rel="noopener">DesignRush</a>
+      </div>
+    </div>
+
+    <!-- Knowt -->
+    <div class="card">
+      <div class="card-accent card-accent--orange"></div>
+      <div class="card-body">
+        <span class="card-tag">🐉 吉祥物系统</span>
+        <h3>Knowt — Kai the Dragon</h3>
+        <p>完整的吉祥物品牌体系：表情库、姿势表、品牌指南、动画套装。龙角色 Kai 经过多轮风格测试最终选定，Dribbble 高赞案例。</p>
+        <div class="card-tags"><span>吉祥物系统</span><span>品牌指南</span><span>表情动画</span></div>
+        <a class="card-link" href="https://dribbble.com/shots/25826877-Branding-and-Mascot-design-for-Knowt" target="_blank" rel="noopener">Dribbble</a>
+      </div>
+    </div>
+
+    <!-- ITom -->
+    <div class="card">
+      <div class="card-accent card-accent--mint"></div>
+      <div class="card-body">
+        <span class="card-tag">✏️ 手绘 × WebGL</span>
+        <h3>ITom Szmajda 作品集</h3>
+        <p>铅笔素描画廊，滚动时 2D 撕纸过渡到 3D 场景。手绘相框 + CSS 撕纸动画，WebGL 将平面插画带入立体空间。技术与手工感完美平衡。</p>
+        <div class="card-tags"><span>WebGL</span><span>手绘素描</span><span>2D→3D</span></div>
+        <a class="card-link" href="https://line25.com/tag/sketch/" target="_blank" rel="noopener">Line25 收录</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====== 灵感入口 ====== -->
+<div class="section">
+  <h2 class="section-title"><span class="emoji">🔍</span> 持续找灵感的入口</h2>
+  <div class="resource-list">
+    <a class="resource-pill" href="https://awwwards.com" target="_blank" rel="noopener">🏆 Awwwards<span style="color:#9B8AAA;font-size:0.8rem;">搜 tag: illustration / cartoon</span></a>
+    <a class="resource-pill" href="https://dribbble.com" target="_blank" rel="noopener">🏀 Dribbble<span style="color:#9B8AAA;font-size:0.8rem;">mascot / illustrated website</span></a>
+    <a class="resource-pill" href="https://hoverstat.es" target="_blank" rel="noopener">🌀 Hoverstat.es<span style="color:#9B8AAA;font-size:0.8rem;">实验性插画站点</span></a>
+    <a class="resource-pill" href="https://line25.com/tag/sketch/" target="_blank" rel="noopener">✏️ Line25<span style="color:#9B8AAA;font-size:0.8rem;">手绘/卡通背景合集</span></a>
+    <a class="resource-pill" href="https://godly.website" target="_blank" rel="noopener">✨ Godly<span style="color:#9B8AAA;font-size:0.8rem;">高品味动画预览</span></a>
+    <a class="resource-pill" href="https://minimal.gallery" target="_blank" rel="noopener">⬜ Minimal Gallery<span style="color:#9B8AAA;font-size:0.8rem;">插画极简主义</span></a>
+    <a class="resource-pill" href="https://siteinspire.com" target="_blank" rel="noopener">🎯 SiteInspire<span style="color:#9B8AAA;font-size:0.8rem;">编辑感筛选系统</span></a>
+    <a class="resource-pill" href="https://orpetron.com/blog/web-design-excellence-through-illustration-10-creative-sites/" target="_blank" rel="noopener">📖 Orpetron<span style="color:#9B8AAA;font-size:0.8rem;">10 个插画站点分析</span></a>
+  </div>
+</div>
+
+<!-- ====== 免费素材 ====== -->
+<div class="section">
+  <h2 class="section-title"><span class="emoji">🧩</span> 免费手绘/卡通素材库</h2>
+  <div class="tools-grid">
+    <div class="tool-card">
+      <h4>🎭 Open Peeps</h4>
+      <p>手绘线条人物，混搭组件生成不同角色。适合温暖非正式的品牌站。</p>
+      <a href="https://www.openpeeps.com" target="_blank" rel="noopener">openpeeps.com →</a>
+    </div>
+    <div class="tool-card">
+      <h4>🌀 Absurd Design</h4>
+      <p>超现实手绘插画，非常规视觉语言。适合创意机构、艺术项目。</p>
+      <a href="https://absurd.design" target="_blank" rel="noopener">absurd.design →</a>
+    </div>
+    <div class="tool-card">
+      <h4>☀️ Lukasz Adam</h4>
+      <p>温暖极简的手绘 SVG，个人站和博客的绝佳选择。</p>
+      <a href="https://lukaszadam.com/illustrations" target="_blank" rel="noopener">lukaszadam.com →</a>
+    </div>
+    <div class="tool-card">
+      <h4>🎨 DrawKit</h4>
+      <p>多风格含手绘，适合 SaaS landing page 和初创公司。</p>
+      <a href="https://www.drawkit.com" target="_blank" rel="noopener">drawkit.com →</a>
+    </div>
+    <div class="tool-card">
+      <h4>👥 Humaaans</h4>
+      <p>混搭人物插画库，团队页和 onboarding 的常青选择。</p>
+      <a href="https://www.humaaans.com" target="_blank" rel="noopener">humaaans.com →</a>
+    </div>
+    <div class="tool-card">
+      <h4>🌸 Blush</h4>
+      <p>多位插画师作品合集，风格覆盖广，可调组件换色。</p>
+      <a href="https://blush.design" target="_blank" rel="noopener">blush.design →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 实现技术 ====== -->
+<div class="section">
+  <h2 class="section-title"><span class="emoji">⚙️</span> 卡通站常用技术栈</h2>
+  <div class="tools-grid">
+    <div class="tool-card">
+      <h4>🎬 Lottie / dotLottie</h4>
+      <p>矢量动画，文件仅为 GIF 的 1/10-1/30。支持状态机，idle/wave/celebrate 一键切换。跨平台。</p>
+      <a href="https://com.lottiefiles.com/blog/design-inspiration/lottie-character-animation-bring-your-brand-mascot-to-life" target="_blank" rel="noopener">LottieFiles 指南 →</a>
+    </div>
+    <div class="tool-card">
+      <h4>🕹️ Rive</h4>
+      <p>实时交互动画工具，状态控制和输入响应比 Lottie 更灵活。适合复杂角色动画。</p>
+      <a href="https://rive.app" target="_blank" rel="noopener">rive.app →</a>
+    </div>
+    <div class="tool-card">
+      <h4>📜 GSAP + ScrollTrigger</h4>
+      <p>滚动驱动卡通叙事的主力工具。逐帧动画 + 视差 + 时间线控制。</p>
+      <a href="https://gsap.com" target="_blank" rel="noopener">gsap.com →</a>
+    </div>
+    <div class="tool-card">
+      <h4>🧊 WebGL (Three.js / OGL)</h4>
+      <p>3D 场景 + 手绘纹理贴图。案例：ITom 作品集、Ponpon Mania 梦境场景。</p>
+      <a href="https://threejs.org" target="_blank" rel="noopener">threejs.org →</a>
+    </div>
+    <div class="tool-card">
+      <h4>✍️ SVG 动画 (CSS / SMIL)</h4>
+      <p>轻量手绘线条动画，stroke-dasharray + scroll-timeline 实现零 JS 依赖。</p>
+    </div>
+    <div class="tool-card">
+      <h4>🖌️ Canvas 2D</h4>
+      <p>像素艺术、涂鸦效果、手写笔迹。适合低性能开销的满屏卡通特效。</p>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p style="font-size:1.2rem;">🐣 卡通风格不是把图标换成插画，而是让整个体验<span class="squiggle">会说人话</span></p>
+  <p style="margin-top:12px;">所有案例版权归原作者所有 · 本页仅作灵感索引</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>经典网页设计灵感合集</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FAFAFA;
+    --surface: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #6B6B6B;
+    --border: #E5E5E5;
+    --border-strong: #D0D0D0;
+    --accent: #1A1A1A;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  body {
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Header ---- */
+  .header {
+    padding: 80px 24px 64px;
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .header .kicker {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .header h1 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .header p {
+    font-size: 1.1rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .divider {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .divider hr {
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ---- Section ---- */
+  .section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 64px 24px;
+  }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+  .section-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .section-header .count {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+
+  /* ---- Gallery grid (代表作) ---- */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 20px;
+  }
+  .gallery-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .gallery-card:hover {
+    border-color: var(--border-strong);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  }
+  .gallery-card .rank {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .gallery-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+    padding-right: 40px;
+  }
+  .gallery-card .subtitle {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .gallery-card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: #444;
+    flex: 1;
+  }
+  .gallery-card .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .gallery-card .tags span {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: #F5F5F5;
+    color: #555;
+  }
+
+  /* ---- Table ---- */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  thead th {
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    background: #FAFAFA;
+  }
+  tbody td {
+    padding: 14px 20px;
+    border-bottom: 1px solid #F0F0F0;
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: #FAFAFA; }
+  .pill {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: #F0F0F0;
+    color: #444;
+  }
+  .pill--gold   { background: #FFF7E0; color: #8A6D15; }
+  .pill--purple { background: #F3E8FF; color: #6B21A8; }
+  .pill--blue   { background: #E0F0FF; color: #1E5FA8; }
+  .pill--green  { background: #E6F7EC; color: #1B7A3D; }
+
+  /* ---- Resource grid ---- */
+  .resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .resource-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    transition: border-color 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .resource-card:hover {
+    border-color: var(--accent);
+  }
+  .resource-card h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .resource-card .domain {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: monospace;
+  }
+  .resource-card p {
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+  .resource-card .meta {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* ---- Principles ---- */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+  .principle-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .principle-card .icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F5F5F5;
+    border-radius: 12px;
+  }
+  .principle-card h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .principle-card p {
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  /* ---- Footer ---- */
+  .footer {
+    text-align: center;
+    padding: 64px 24px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 480px) {
+    .gallery { grid-template-columns: 1fr; }
+    .header { padding: 56px 16px 40px; }
+    .section { padding: 40px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="kicker">Web Design Inspiration</div>
+  <h1>经典网页设计灵感合集</h1>
+  <p>从行业奖项到策展画廊，从 2024–2025 代表性案例到经典 Web App 标杆 — 一站式索引</p>
+</header>
+
+<div class="divider"><hr></div>
+
+<!-- ====== 奖项平台 ====== -->
+<div class="section">
+  <div class="section-header">
+    <h2>行业奖项平台</h2>
+    <span class="count">5 个</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>平台</th>
+          <th>侧重点</th>
+          <th>特色</th>
+          <th>费用</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Awwwards</strong><br><a href="https://awwwards.com" style="font-size:0.8rem;color:var(--muted);">awwwards.com</a></td>
+          <td>实验性、动画、前沿</td>
+          <td>行业人士评审 Design / Usability / Creativity / Content 四维度；按技术栈/色彩/行业筛选；每日 Site of the Day</td>
+          <td>免费<br><span style="font-size:0.78rem;color:var(--muted);">Pro $6.70/月</span></td>
+        </tr>
+        <tr>
+          <td><strong>CSS Design Awards</strong><br><a href="https://cssdesignawards.com" style="font-size:0.8rem;color:var(--muted);">cssdesignawards.com</a></td>
+          <td>CSS & 前端实现质量</td>
+          <td>UI/UX/Innovation 评审；投稿费比 Awwwards 低，小型工作室和实验性个人站更多</td>
+          <td>免费</td>
+        </tr>
+        <tr>
+          <td><strong>The FWA</strong><br><a href="https://thefwa.com" style="font-size:0.8rem;color:var(--muted);">thefwa.com</a></td>
+          <td>数字创新 & 前沿技术</td>
+          <td>2000 年创立的历史最久奖项之一；侧重 WebGL、沉浸式体验、实验性交互</td>
+          <td>免费</td>
+        </tr>
+        <tr>
+          <td><strong>Webby Awards</strong><br><a href="https://webbyawards.com" style="font-size:0.8rem;color:var(--muted);">webbyawards.com</a></td>
+          <td>整体数字体验 & 社会影响</td>
+          <td>"互联网奥斯卡"；涵盖网站、广告、App、游戏；不只评视觉，更评意义</td>
+          <td>免费</td>
+        </tr>
+        <tr>
+          <td><strong>D&AD</strong><br><a href="https://dandad.org" style="font-size:0.8rem;color:var(--muted);">dandad.org</a></td>
+          <td>最高创意水准</td>
+          <td>铅笔奖；Digital Design 类别要求极致的创意概念与工艺执行；适合研究顶级品牌数字体验</td>
+          <td>免费</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ====== 策展画廊 ====== -->
+<div class="section">
+  <div class="section-header">
+    <h2>经典策展画廊</h2>
+    <span class="count">5 个</span>
+  </div>
+  <div class="resource-grid">
+    <a class="resource-card" href="https://siteinspire.com" target="_blank" rel="noopener">
+      <h4>SiteInspire</h4>
+      <span class="domain">siteinspire.com</span>
+      <p>筛选系统最强 — 按风格/类型/主题/平台筛选。偏干净、编辑感、欧洲审美，大量留白与克制用色。</p>
+      <div class="meta"><span>2010 年至今</span><span>编辑策展</span></div>
+    </a>
+    <a class="resource-card" href="https://godly.website" target="_blank" rel="noopener">
+      <h4>Godly</h4>
+      <span class="domain">godly.website</span>
+      <p>手选极美网站，每周仅收录 3-5 个。带动画缩略图预览，品味极高，创意机构首选。</p>
+      <div class="meta"><span>动画预览</span><span>高门槛</span></div>
+    </a>
+    <a class="resource-card" href="https://minimal.gallery" target="_blank" rel="noopener">
+      <h4>Minimal Gallery</h4>
+      <span class="domain">minimal.gallery</span>
+      <p>极简主义专精 — 最大留白、最少的色彩、最强的字体。用最大克制产生最大冲击力。</p>
+      <div class="meta"><span>极简主义</span><span>字体驱动</span></div>
+    </a>
+    <a class="resource-card" href="https://httpster.com" target="_blank" rel="noopener">
+      <h4>Httpster</h4>
+      <span class="domain">httpster.com</span>
+      <p>独立设计师、字体铸造厂、小型工作室的低调个人化站点。不炫技，重在品味与克制。</p>
+      <div class="meta"><span>独立设计</span><span>低调审美</span></div>
+    </a>
+    <a class="resource-card" href="https://land-book.com" target="_blank" rel="noopener">
+      <h4>Land-book</h4>
+      <span class="domain">land-book.com</span>
+      <p>Landing page 专精 — 按行业/风格/色彩分类。适合营销页、产品发布、转化导向布局参考。</p>
+      <div class="meta"><span>落地页专精</span><span>营销导向</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- ====== 2024-2025 代表案例 ====== -->
+<div class="section">
+  <div class="section-header">
+    <h2>2024–2025 代表性案例</h2>
+    <span class="count">5 个</span>
+  </div>
+  <div class="gallery">
+
+    <div class="gallery-card">
+      <span class="rank">Codrops</span>
+      <h3>Anderson Moss</h3>
+      <p class="subtitle">反品牌哲学 × 超现实 3D</p>
+      <p>获奖个人项目。粗衬线/无衬线字体混排 + 超现实 3D 环境，仓库中未穿衣的模特人偶象征创意的"空白画布"。文化和哲学定义品牌，而非 logo。</p>
+      <div class="tags">
+        <span>3D</span><span>粗衬线字体</span><span>反品牌</span>
+      </div>
+    </div>
+
+    <div class="gallery-card">
+      <span class="rank">Codrops</span>
+      <h3>Troa 25′ Folio</h3>
+      <p class="subtitle">环保意识 × 极致性能</p>
+      <p>首页仅 500KB、12 个 HTTP 请求、0.13g CO₂/次（网站平均 1.76g）。手写字体 + 无衬线，全部动画用纯 CSS 实现，无 GSAP 或 Anime.js 依赖。</p>
+      <div class="tags">
+        <span>500KB</span><span>纯 CSS 动画</span><span>可持续性</span>
+      </div>
+    </div>
+
+    <div class="gallery-card">
+      <span class="rank">2025</span>
+      <h3>basement studio — Digital HQ</h3>
+      <p class="subtitle">PS2 时代 3D 办公室</p>
+      <p>点选式导航穿越完整建模的工作室。自定义着色器、光照贴图、实例化网格。团队成员通过 morph targets 面部扫描。所有 3D 资产在 CMS 中管理，与代码解耦。</p>
+      <div class="tags">
+        <span>WebGL</span><span>点选导航</span><span>怀旧 3D</span>
+      </div>
+    </div>
+
+    <div class="gallery-card">
+      <span class="rank">2025</span>
+      <h3>SEATED</h3>
+      <p class="subtitle">手工质感 × 美食体验</p>
+      <p>33 张手作拼贴画、数百张照片、铅笔质感插画、手写评论、纸纹背景和"素描"按钮。从零开始构建，证明质感与不完美能创造令人难忘的数字体验。</p>
+      <div class="tags">
+        <span>拼贴画</span><span>纸纹</span><span>手写</span>
+      </div>
+    </div>
+
+    <div class="gallery-card">
+      <span class="rank">2025</span>
+      <h3>Rick Rubin × Squarespace</h3>
+      <p class="subtitle">"The Transmission" 模板</p>
+      <p>首页仅一幅艺术作品。无 logo、无菜单、无任何其他信息。一个月内冲进 Squarespace 全球前 20 模板。核心理念："单一焦点有镇定效果"。</p>
+      <div class="tags">
+        <span>极简</span><span>单页</span><span>内容优先</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====== Web App 标杆 ====== -->
+<div class="section">
+  <div class="section-header">
+    <h2>经典 Web App 设计标杆</h2>
+    <span class="count">5 个</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>产品</th>
+          <th>核心设计特征</th>
+          <th>值得学习</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Airbnb</strong></td>
+          <td>大面积留白、模块化设计承载海量内容、微交互精细</td>
+          <td><span class="pill pill--gold">留白系统</span> <span class="pill pill--blue">模块化</span></td>
+        </tr>
+        <tr>
+          <td><strong>Spotify</strong></td>
+          <td>暗色主题、粗字体排版、无感导航、专注内容不抢戏</td>
+          <td><span class="pill pill--purple">暗色主题</span> <span class="pill pill--gold">排版层次</span></td>
+        </tr>
+        <tr>
+          <td><strong>Stripe</strong></td>
+          <td>开发者工具做到极致清晰、代码示例与 UI 无缝融合</td>
+          <td><span class="pill pill--blue">技术产品设计</span> <span class="pill pill--green">信息架构</span></td>
+        </tr>
+        <tr>
+          <td><strong>Linear</strong></td>
+          <td>现代 SaaS 美学的定义者、快捷键优先、暗色 + 细线图标</td>
+          <td><span class="pill pill--purple">SaaS 美学</span> <span class="pill pill--blue">交互细节</span></td>
+        </tr>
+        <tr>
+          <td><strong>Slack</strong></td>
+          <td>干净无干扰 UI、自定义 emoji 增加趣味、亮/暗主题</td>
+          <td><span class="pill pill--green">趣味性</span> <span class="pill pill--gold">可定制性</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ====== 设计原则 ====== -->
+<div class="section">
+  <div class="section-header">
+    <h2>2024–2025 浮现的核心原则</h2>
+    <span class="count">6 条</span>
+  </div>
+  <div class="principles">
+    <div class="principle-card">
+      <div class="icon">📄</div>
+      <div>
+        <h4>内容优先极简</h4>
+        <p>Rick Rubin、Amadio 为代表 — 去掉一切装饰，让内容本身成为界面</p>
+      </div>
+    </div>
+    <div class="principle-card">
+      <div class="icon">✋</div>
+      <div>
+        <h4>手工不完美</h4>
+        <p>SEATED、Troa — 手写字体、纸纹、拼贴，人性化质感取代像素级完美</p>
+      </div>
+    </div>
+    <div class="principle-card">
+      <div class="icon">🌱</div>
+      <div>
+        <h4>可持续性 & 性能</h4>
+        <p>Troa 500KB 首页、纯 CSS 动画 — 轻量即美德，碳排放纳入设计指标</p>
+      </div>
+    </div>
+    <div class="principle-card">
+      <div class="icon">📺</div>
+      <div>
+        <h4>怀旧重译</h4>
+        <p>Gentle Rain（80s）、basement（PS2）— 拿过去的媒介语言讲今天的故事</p>
+      </div>
+    </div>
+    <div class="principle-card">
+      <div class="icon">🔤</div>
+      <div>
+        <h4>字体即身份</h4>
+        <p>Anderson Moss 的粗衬线、Satellites 的程序化变形字 — 字体就是品牌</p>
+      </div>
+    </div>
+    <div class="principle-card">
+      <div class="icon">🧊</div>
+      <div>
+        <h4>3D 为叙事服务</h4>
+        <p>Anderson Moss、basement — 3D 不炫技，而是讲故事的必要语言</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>所有案例版权归原作者所有 · 本页仅作灵感索引 · 善用筛选，深度分析，不复制</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>羊积泥 · 数字角落</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500&family=Ma+Shan+Zheng&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #FCF9F2;
+    --surface: #FFFFFF;
+    --text:    #2D1B1B;
+    --muted:   #8B7568;
+    --accent:  #C7624A;
+    --accent2: #7A9E7E;
+    --warm:    #F3ECE0;
+    --border:  #E6DCD0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at 85% 5%,  rgba(199,98,74,0.05) 0%, transparent 55%),
+      radial-gradient(ellipse at 15% 70%, rgba(122,158,126,0.04) 0%, transparent 50%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 99999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 256px;
+  }
+
+  /* ======== SCROLL REVEAL ======== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.08s; }
+  .reveal-delay-2 { transition-delay: 0.16s; }
+  .reveal-delay-3 { transition-delay: 0.24s; }
+  .reveal-delay-4 { transition-delay: 0.32s; }
+
+  /* ======== HERO ======== */
+  .hero {
+    padding: 100px 28px 80px;
+    max-width: 760px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    align-items: end;
+    transition: transform 0.15s ease-out;
+    will-change: transform;
+  }
+  .hero-left { grid-column: 1; }
+  .hero-right { grid-column: 2; padding-bottom: 14px; }
+  .hero .scribble {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 1.5rem; color: var(--accent); opacity: 0.85;
+    line-height: 1; margin-bottom: 12px;
+    transform: rotate(-2deg); display: inline-block;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(3rem, 8vw, 5rem); font-weight: 900;
+    letter-spacing: 0.06em; line-height: 1; margin-bottom: 24px;
+  }
+  .hero .tagline {
+    font-size: 0.92rem; font-weight: 300; color: var(--muted);
+    line-height: 1.95; max-width: 400px;
+  }
+  .hero .tagline em {
+    font-style: normal; font-weight: 500; color: var(--accent);
+  }
+  .hero-right .doodle-note {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 0.95rem; color: var(--accent2); opacity: 0.7;
+    line-height: 1.6; text-align: right; padding-top: 8px;
+    border-top: 2px dotted var(--border);
+    animation: float-note 4s ease-in-out infinite;
+  }
+  @keyframes float-note {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(0.5deg); }
+  }
+
+  .wavy-underline {
+    display: block; width: 100%; height: 14px;
+    margin-top: -10px; margin-bottom: 8px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14'%3E%3Cpath d='M0,7 Q25,0 50,7 T100,7 T150,7 T200,7' fill='none' stroke='%23C7624A' stroke-width='1.5' opacity='0.5'/%3E%3C/svg%3E") repeat-x bottom/200px 14px;
+  }
+
+  .scroll-hint {
+    text-align: center; padding-bottom: 16px;
+    animation: bounce-down 2s ease-in-out infinite;
+    opacity: 0.35; font-size: 0.85rem; color: var(--muted);
+    font-family: 'Ma Shan Zheng', cursive;
+  }
+  @keyframes bounce-down {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+
+  /* ======== SECTION BASE ======== */
+  .section {
+    max-width: 760px; margin: 0 auto; padding: 0 28px 88px;
+  }
+  .section-num {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 1.3rem; color: var(--accent); opacity: 0.6;
+    display: inline-block; margin-bottom: 8px; transform: rotate(-3deg);
+  }
+
+  /* ======== ABOUT ======== */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 440px; gap: 36px; align-items: start;
+  }
+  .about-grid h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.6rem; font-weight: 700; letter-spacing: 0.04em;
+    line-height: 1.4; text-align: right; padding-top: 6px;
+  }
+  .about-grid h2 .hl {
+    display: inline-block;
+    background: linear-gradient(to top, rgba(199,98,74,0.15) 40%, transparent 40%);
+  }
+  .about-text {
+    font-size: 0.92rem; line-height: 2; color: #5A4242;
+  }
+  .about-text .annotation {
+    font-family: 'Ma Shan Zheng', cursive; font-size: 1rem;
+    color: var(--accent); opacity: 0.7; display: inline-block;
+    transform: rotate(-2deg); margin-left: 4px;
+  }
+  .note {
+    background: #FFFEF9; border: 1px solid #E6DCD0;
+    padding: 24px 28px; margin-top: 28px;
+    transform: rotate(0.8deg);
+    box-shadow: 0 1px 2px rgba(45,27,27,0.03), 0 6px 20px rgba(45,27,27,0.04);
+    position: relative; max-width: 480px; margin-left: auto;
+    transition: transform 0.3s;
+  }
+  .note:hover { transform: rotate(0deg) scale(1.02); }
+  .note p { font-size: 0.86rem; color: #5A4242; line-height: 1.95; }
+  .note::after {
+    content: ''; position: absolute; top: -12px; left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 56px; height: 22px;
+    background: rgba(255,255,245,0.75); border: 1px solid #E8DFD1; border-radius: 2px;
+  }
+
+  /* ======== TIMELINE ======== */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+    border-left: 2px dashed var(--border);
+    margin-left: 100px;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+    padding-left: 28px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -35px; top: 6px;
+    width: 12px; height: 12px;
+    background: var(--accent); border-radius: 50%;
+    opacity: 0.5;
+    transition: all 0.3s;
+  }
+  .timeline-item:hover::before {
+    opacity: 1; transform: scale(1.4);
+    box-shadow: 0 0 0 6px rgba(199,98,74,0.1);
+  }
+  .timeline-item .year {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 0.9rem; color: var(--accent); opacity: 0.7; margin-bottom: 4px;
+  }
+  .timeline-item h4 {
+    font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; margin-bottom: 4px;
+  }
+  .timeline-item p {
+    font-size: 0.85rem; color: #7A6464; line-height: 1.7;
+  }
+
+  /* ======== SKILLS ======== */
+  .skills-area {
+    display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: center;
+  }
+  .skills-area .tag {
+    font-size: 0.88rem; padding: 8px 18px; border-radius: 100px;
+    background: var(--warm); color: #6B5040; border: 1px solid var(--border);
+    cursor: default; transition: all 0.2s; white-space: nowrap;
+  }
+  .skills-area .tag:hover {
+    background: var(--surface); border-color: var(--accent2);
+    transform: translateY(-2px) rotate(1deg);
+  }
+  .skills-area .tag:nth-child(2) { font-size: 1rem; padding: 10px 22px; }
+  .skills-area .tag:nth-child(4) { transform: rotate(-1deg); }
+  .skills-area .tag:nth-child(6) { font-size: 0.82rem; transform: rotate(0.5deg); }
+  .skills-area .tag:nth-child(8) { transform: rotate(-0.8deg); }
+  .skills-area .tag:nth-child(10) { font-size: 0.82rem; transform: rotate(0.6deg); }
+  .tag.highlight {
+    background: var(--accent) !important; color: #fff !important;
+    border-color: var(--accent) !important; font-weight: 500;
+    font-size: 1.05rem !important; padding: 12px 26px !important;
+    transform: rotate(-2deg) !important;
+  }
+  .tag.highlight:hover { transform: rotate(2deg) !important; }
+  .handwritten-note {
+    display: inline-block; font-family: 'Ma Shan Zheng', cursive;
+    font-size: 0.95rem; color: var(--accent2); opacity: 0.65;
+    margin-left: 8px; transform: rotate(-4deg);
+  }
+
+  /* ======== PROJECTS ======== */
+  .project-list { display: flex; flex-direction: column; gap: 18px; }
+  .project-card {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 22px 34px 22px 26px;
+    text-decoration: none; color: inherit;
+    display: block; max-width: 460px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+  }
+  .project-card:nth-child(1) { margin-left: 0;  transform: rotate(-0.4deg); border-radius: 2px 16px 16px 4px; }
+  .project-card:nth-child(2) { margin-left: auto; transform: rotate(0.6deg);  border-radius: 16px 2px 4px 16px; }
+  .project-card:nth-child(3) { margin-left: 30px; transform: rotate(-0.3deg); border-radius: 4px 4px 18px 4px; }
+  .project-card:nth-child(4) { margin-left: auto; margin-right: 20px; transform: rotate(0.9deg);  border-radius: 12px 2px 4px 14px; }
+  .project-card:hover {
+    transform: translateY(-4px) rotate(0deg) !important;
+    box-shadow: 0 10px 32px rgba(45,27,27,0.08);
+    border-color: #D0C4B6;
+  }
+  .project-card h4 { font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .project-card .role {
+    font-size: 0.78rem; color: var(--accent); font-weight: 500;
+    margin-bottom: 8px; display: inline-block;
+    background: rgba(199,98,74,0.06); padding: 2px 10px; border-radius: 100px;
+  }
+  .project-card p { font-size: 0.84rem; color: #7A6464; line-height: 1.7; }
+  .project-card::after {
+    content: '→';
+    position: absolute; right: 22px; bottom: 20px;
+    font-size: 1rem; color: var(--accent);
+    opacity: 0; transform: translateX(-8px);
+    transition: all 0.25s ease;
+  }
+  .project-card:hover::after { opacity: 1; transform: translateX(0); }
+  .project-card:nth-child(1)::before {
+    content: ''; position: absolute; top: -9px; left: 60px;
+    width: 44px; height: 20px;
+    background: rgba(255,255,245,0.7); border: 1px solid #E8DFD1;
+    border-radius: 1px; transform: rotate(-5deg);
+  }
+
+  /* ======== CURRENTLY ======== */
+  .currently-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .currently-card {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 20px 22px;
+    transition: all 0.25s;
+  }
+  .currently-card:nth-child(1) { border-radius: 4px 16px 4px 16px; }
+  .currently-card:nth-child(2) { border-radius: 16px 4px 16px 4px; transform: rotate(-0.4deg); }
+  .currently-card:nth-child(3) { border-radius: 6px 20px 6px 6px; transform: rotate(0.5deg); }
+  .currently-card:nth-child(4) { border-radius: 16px 4px 14px 4px; transform: rotate(-0.3deg); }
+  .currently-card:hover {
+    transform: translateY(-3px) rotate(0deg) !important;
+    box-shadow: 0 6px 20px rgba(45,27,27,0.05);
+  }
+  .currently-card .icon { font-size: 1.4rem; margin-bottom: 8px; }
+  .currently-card h4 {
+    font-family: 'Noto Serif SC', serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 6px;
+  }
+  .currently-card p { font-size: 0.82rem; color: #7A6464; line-height: 1.7; }
+
+  /* ======== VALUES ======== */
+  .values-list {
+    display: flex; flex-direction: column; gap: 12px;
+    max-width: 580px; margin-left: 60px;
+  }
+  .value-item {
+    display: flex; align-items: baseline; gap: 14px;
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .value-item:hover { padding-left: 8px; }
+  .value-item .v-num {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 1.2rem; color: var(--accent2); opacity: 0.5;
+    flex-shrink: 0;
+  }
+  .value-item strong {
+    font-family: 'Noto Serif SC', serif; font-size: 0.95rem; font-weight: 700;
+    flex-shrink: 0; width: 140px;
+  }
+  .value-item span { font-size: 0.86rem; color: #6B5858; line-height: 1.7; }
+
+  /* ======== FOOTER ======== */
+  .footer {
+    max-width: 760px; margin: 0 auto; padding: 60px 28px 72px; text-align: center;
+  }
+  .footer .divider {
+    width: 48px; height: 4px; background: var(--accent);
+    opacity: 0.3; margin: 0 auto 32px; border-radius: 2px;
+  }
+  .footer .connect {
+    font-family: 'Noto Serif SC', serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 16px;
+  }
+  .footer .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin-bottom: 28px; }
+  .footer .links a {
+    font-size: 0.9rem; color: var(--muted); text-decoration: none; transition: color 0.2s;
+  }
+  .footer .links a:hover { color: var(--accent); }
+  .footer .copyright {
+    color: #B8A99C; font-family: 'Ma Shan Zheng', cursive; font-size: 0.9rem; line-height: 1.8;
+  }
+
+  /* ======== BACK TO TOP ======== */
+  .back-top {
+    position: fixed; bottom: 32px; right: 32px;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 1.1rem; color: var(--accent);
+    opacity: 0; transform: translateY(12px);
+    transition: all 0.3s;
+    pointer-events: none; z-index: 100;
+    box-shadow: 0 2px 10px rgba(45,27,27,0.04);
+  }
+  .back-top.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .back-top:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(45,27,27,0.08); }
+
+  /* ======== RESPONSIVE ======== */
+  @media (max-width: 680px) {
+    .hero { grid-template-columns: 1fr; padding: 60px 20px 56px; }
+    .hero-right { grid-column: 1; padding-top: 20px; }
+    .hero-right .doodle-note { text-align: left; border-top: none; border-left: 2px dotted var(--border); padding-left: 16px; padding-top: 0; }
+    .hero h1 { font-size: 2.6rem; }
+    .hero .tagline { max-width: 100%; }
+
+    .about-grid { grid-template-columns: 1fr; gap: 16px; }
+    .about-grid h2 { text-align: left; }
+
+    .timeline { margin-left: 0; }
+
+    .project-card:nth-child(1), .project-card:nth-child(2),
+    .project-card:nth-child(3), .project-card:nth-child(4) {
+      margin-left: 0 !important; margin-right: 0 !important;
+      max-width: 100%; transform: rotate(0) !important;
+    }
+
+    .currently-grid { grid-template-columns: 1fr; }
+    .note { margin-left: 0; max-width: 100%; transform: rotate(0); }
+    .values-list { margin-left: 0; }
+    .value-item { flex-wrap: wrap; gap: 6px; }
+    .value-item strong { width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== HERO ====== -->
+<section class="hero reveal" id="hero">
+  <div class="hero-left">
+    <span class="scribble">嗨，我是</span>
+    <h1>羊积泥</h1>
+    <div class="wavy-underline"></div>
+    <p class="tagline">
+      一个<em>靠跟 AI 聊天写代码</em>的大学生。前端画过、后端搭过、游戏玩过——没一个精通，但每个方向都玩得很开心。目前的核心竞争力：擅长用一句话让 AI 吐出八百行代码，然后花一整天改那八百行。
+    </p>
+  </div>
+  <div class="hero-right">
+    <p class="doodle-note">"prompt engineering<br>十级学者<br>（自封）"</p>
+  </div>
+</section>
+<div class="scroll-hint">↓ 往下逛逛</div>
+
+<!-- ====== ABOUT ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 01</span>
+  <div class="about-grid">
+    <h2 class="reveal">不能说全栈，只能说<mark class="hl">全都碰过</mark></h2>
+    <div>
+      <p class="about-text reveal">
+        大学生，技术方向。写代码的方式比较野生——打开 Claude、描述想法、看它吐代码、跑起来、报错、把报错贴回去、再跑、改到自己不认识为止。
+      </p>
+      <p class="about-text reveal reveal-delay-1" style="margin-top:14px;">
+        做过网页前端，搭过后端接口，也折腾过小游戏 Demo。没有哪个方向是"精通"的，但每个方向都留下了一堆能跑的半成品。对我来说，能从零变出一个能用的东西，比在某个领域深挖到底更有意思。
+      </p>
+      <p class="about-text reveal reveal-delay-2" style="margin-top:14px;">
+        这个页面也是这么来的——跟 AI 来回拉扯了好几轮，从它给的"紫色渐变毛玻璃"一路改成了现在这样。
+      </p>
+      <div class="note reveal reveal-delay-3">
+        <p>我理解的 vibe coding：<br>不是让 AI 替你做，而是你和 AI 一起试探——你负责方向，它负责输出，你负责审美，它负责加班。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== JOURNEY ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 02</span>
+  <div style="margin-bottom: 28px;">
+    <h2 class="reveal" style="font-family: 'Noto Serif SC', serif; font-size: 1.6rem; font-weight: 700; display: inline;">来路</h2>
+    <span class="handwritten-note reveal reveal-delay-1">以及 AI 是怎么混进来的</span>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <p class="year">2023</p>
+      <h4>手写 Python 的时代</h4>
+      <p>一行一行自己敲。一个冒号缩进报错能查半小时。那时候还不知道 AI 能写代码，纯手工，痛并快乐着。</p>
+    </div>
+    <div class="timeline-item reveal reveal-delay-1">
+      <p class="year">2024</p>
+      <h4>前端入门 + 第一次用 AI</h4>
+      <p>开始学 HTML/CSS/JS，同时也发现了 Claude 和 Cursor。突然发现"做一个页面"的门槛从一周变成了一个下午。</p>
+    </div>
+    <div class="timeline-item reveal reveal-delay-2">
+      <p class="year">2024 中</p>
+      <h4>开始不满足了</h4>
+      <p>前端玩顺了，开始想"后端怎么搞"、"能不能做个游戏"。用 FastAPI 搭了第一个接口，用 Godot 做了第一个会动的小人。</p>
+    </div>
+    <div class="timeline-item reveal reveal-delay-3">
+      <p class="year">2025</p>
+      <h4>心态稳定</h4>
+      <p>不再纠结"我到底是前端还是后端"。我是——手里有 AI，想到什么做什么。今天写网页，明天调 API，后天画像素。</p>
+    </div>
+    <div class="timeline-item reveal reveal-delay-4">
+      <p class="year">此刻</p>
+      <h4>在搭这个地方</h4>
+      <p>一个会持续改来改去的页面。每一版都是我和 AI 的合著——只不过美学决策权在我手里。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SKILLS ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 03</span>
+  <div style="margin-bottom: 24px;">
+    <h2 class="reveal" style="font-family: 'Noto Serif SC', serif; font-size: 1.6rem; font-weight: 700; display: inline;">涉猎范围</h2>
+    <span class="handwritten-note reveal reveal-delay-1">每个都够做个小项目，没一个敢写"精通"</span>
+  </div>
+  <div class="skills-area reveal reveal-delay-1">
+    <span class="tag highlight">前端（主场）</span>
+    <span class="tag">Python</span>
+    <span class="tag">JavaScript</span>
+    <span class="tag">FastAPI</span>
+    <span class="tag">Godot</span>
+    <span class="tag">HTML / CSS</span>
+    <span class="tag">Figma（偶尔）</span>
+    <span class="tag">Unity（摸过）</span>
+    <span class="tag">SQL（会查）</span>
+    <span class="tag">Prompt Engineering</span>
+    <span class="tag">游戏设计（纸上）</span>
+  </div>
+</section>
+
+<!-- ====== PROJECTS ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 04</span>
+  <div style="margin-bottom: 24px;">
+    <h2 class="reveal" style="font-family: 'Noto Serif SC', serif; font-size: 1.6rem; font-weight: 700; display: inline;">折腾过的东西</h2>
+    <span class="handwritten-note reveal reveal-delay-1">大多数是跟 AI 一起写的</span>
+  </div>
+  <div class="project-list">
+    <a class="project-card reveal" href="#" target="_blank" rel="noopener">
+      <h4>这个个人主页</h4>
+      <span class="role">前端 · AI 协作</span>
+      <p>从第一版紫色渐变模板到这版纸纹 + 手写字体的样子，中间跟 AI 吵了大概二十轮。标准的 vibe coding 流程——它写的代码我改了一半，我改的它又改回去了。</p>
+    </a>
+    <a class="project-card reveal reveal-delay-1" href="https://github.com/ertittotwitch-pixel/idea-box" target="_blank" rel="noopener">
+      <h4>灵感盒子 API</h4>
+      <span class="role">Python · FastAPI</span>
+      <p>给自己的脑子开个接口——存想法碎片、随机取一条、按标签筛选。AI 帮忙写了 80% 的代码，调 bug 花了两倍时间。跑起来那一刻觉得自己可以做后端了。</p>
+    </a>
+    <a class="project-card reveal reveal-delay-2" href="https://github.com/ertittotwitch-pixel/star-catcher" target="_blank" rel="noopener">
+      <h4>捡星星的小人</h4>
+      <span class="role">Canvas · JavaScript</span>
+      <p>浏览器里的 2D 小游戏。← → 移动，空格跳跃，接住天上掉下来的星星和灵感灯泡。粒子爆炸反馈是手写的，背景色跟你主页一样。</p>
+    </a>
+    <a class="project-card reveal reveal-delay-3" href="https://github.com/ertittotwitch-pixel/cli-bot" target="_blank" rel="noopener">
+      <h4>小泥 CLI 聊天机器人</h4>
+      <span class="role">Python · 命令行</span>
+      <p>在终端里陪你聊天的小机器人。记备忘、讲笑话、算东西、吐灵感。零依赖，纯 Python 标准库，clone 下来就能跑。</p>
+    </a>
+  </div>
+</section>
+
+<!-- ====== CURRENTLY ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 05</span>
+  <div style="margin-bottom: 24px;">
+    <h2 class="reveal" style="font-family: 'Noto Serif SC', serif; font-size: 1.6rem; font-weight: 700; display: inline;">当下</h2>
+    <span class="handwritten-note reveal reveal-delay-1">最近的浏览器历史记录</span>
+  </div>
+  <div class="currently-grid">
+    <div class="currently-card reveal">
+      <div class="icon">📖</div>
+      <h4>在看</h4>
+      <p>独立开发者怎么用 AI 做产品的案例。发现"一个人 + AI = 一个小团队"这件事越来越真了。</p>
+    </div>
+    <div class="currently-card reveal reveal-delay-1">
+      <div class="icon">🔧</div>
+      <h4>在学</h4>
+      <p>把 AI 工具链用得更顺手——不只是让它写代码，是让它帮我设计架构、拆任务、写测试。从"AI 写代码我盯着"变成"AI 出方案我审核"。</p>
+    </div>
+    <div class="currently-card reveal reveal-delay-2">
+      <div class="icon">🕹️</div>
+      <h4>在试</h4>
+      <p>想用 Godot + AI 做一个完整的、能发出去给朋友玩的小游戏。目前进度：角色会走路了（了不起的成就）。</p>
+    </div>
+    <div class="currently-card reveal reveal-delay-3">
+      <div class="icon">💭</div>
+      <h4>在想</h4>
+      <p>vibe coding 到底是一种妥协还是新常态？用 AI 做出来的东西算不算"我的作品"？这些问题没有答案，但不妨碍先做着。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====== VALUES ====== -->
+<section class="section">
+  <span class="section-num reveal">/ 06</span>
+  <div style="margin-bottom: 24px;">
+    <h2 class="reveal" style="font-family: 'Noto Serif SC', serif; font-size: 1.6rem; font-weight: 700; display: inline;">我认为</h2>
+    <span class="handwritten-note reveal reveal-delay-1">跟 AI 共事之后形成的偏见</span>
+  </div>
+  <div class="values-list">
+    <div class="value-item reveal">
+      <span class="v-num">01</span>
+      <strong>做一个出来，比什么都重要</strong>
+      <span>跟 AI 合作之后最大的改变：以前想做一个东西，先学三个月。现在先让 AI 写一个能跑的，边改边学。速度不是一个量级。</span>
+    </div>
+    <div class="value-item reveal reveal-delay-1">
+      <span class="v-num">02</span>
+      <strong>审美 > 技术</strong>
+      <span>AI 能写出能用的代码，但它写不出"好看"的东西。最后的 20% 永远要人来调——那 20% 就是区分你和别人的地方。</span>
+    </div>
+    <div class="value-item reveal reveal-delay-2">
+      <span class="v-num">03</span>
+      <strong>广度先于深度</strong>
+      <span>大学期间最宝贵的自由就是可以到处试。前端试半年、后端试半年、游戏试半年——毕业之后再这么任性就难了。趁现在。</span>
+    </div>
+    <div class="value-item reveal reveal-delay-3">
+      <span class="v-num">04</span>
+      <strong>诚实面对"不会"</strong>
+      <span>靠 AI 写代码不丢人。丢人的是假装自己全会。这个页面里没有"精通"两个字，因为真的没有。</span>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer class="footer reveal">
+  <div class="divider"></div>
+  <p class="connect">来打个招呼</p>
+  <div class="links">
+    <a href="mailto:your-email@example.com">Email</a>
+    <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+    <a href="#">博客</a>
+    <a href="#">B 站</a>
+  </div>
+  <p class="copyright">
+    本页面由 羊积泥 与 AI 合著完成。<br>人工负责审美和决策，AI 负责加班和重写。
+  </p>
+</footer>
+
+<!-- ====== BACK TO TOP ====== -->
+<button class="back-top" id="backTop" title="回到顶部">↑</button>
+
+<script>
+  /* ---- Scroll Reveal ---- */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ---- Hero Parallax ---- */
+  const hero = document.getElementById('hero');
+  let heroActive = true;
+  document.addEventListener('mousemove', (e) => {
+    if (!heroActive) return;
+    const x = (e.clientX / window.innerWidth - 0.5) * 14;
+    const y = (e.clientY / window.innerHeight - 0.5) * 14;
+    hero.style.transform = `translate(${x}px, ${y}px)`;
+  });
+  const heroObs = new IntersectionObserver(([e]) => { heroActive = e.isIntersecting; }, { threshold: 0 });
+  heroObs.observe(hero);
+
+  /* ---- Back to Top ---- */
+  const backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('show', window.scrollY > 500);
+  });
+  backTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ---- Mark hero as visible on load ---- */
+  document.querySelector('.hero.reveal').classList.add('visible');
+</script>
+
+</body>
+</html>
